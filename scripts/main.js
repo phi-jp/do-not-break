@@ -25,8 +25,11 @@ var UI_DATA = {
 };
 
 var ASSETS = {
-    "title":  "./image/title.png",
+    "img_title":  "./images/title.png",
+
+    "se_pon": "./sounds/puu.wav",
 };
+var QUERY = tm.util.QueryString.parse(location.search.substr(1));
 
 var barsize;
 // 定数
@@ -59,36 +62,33 @@ var RESULT_PARAM = {
 var speed;
 
 
-tm.preload(function() {
-    //tm.sound.WebAudioManager.add("sound", "http://jsrun.it/static/assets/svggirl/01/svg_girl_theme.mp3");
-});
-
-
-
 tm.main(function() {
-    var app = tm.app.CanvasApp("#world");
+    // app 生成 & 初期化
+    var app = tm.display.CanvasApp("#world");
     app.resize(SCREEN_WIDTH, SCREEN_HEIGHT);
     app.fitWindow();
 
+    // query(http://...?{~}) からシーン名を取得
+    var sceneName = QUERY.scene || "TitleScene";
+
+    // ローディングシーンを生成
     var loading = tm.app.LoadingScene({
         assets: ASSETS,
-        nextScene: TitleScene,
-     //   nextScene: EndScene,
+        width: SCREEN_WIDTH,
+        height: SCREEN_HEIGHT
     });
-    
+    // ロード完了時イベントリスナを登録
+    loading.onload = function() {
+        var scene = tm.global[sceneName]();
+        app.replaceScene(scene);
+    };
+    // シーンきりかえ
     app.replaceScene(loading);
-
-    //app.replaceScene(TitleScene());
-    //app.replaceScene(MainScene());
-
     
-    //音楽
-    //tm.sound.SoundManager.add("bound", "https://github.com/phi1618/tmlib.js/raw/0.1.0/resource/se/puu89.wav");
-    
-
-    
+    // 実行
     app.run();
 });
+
 
 tm.define("TitleScene", {
     superClass : "tm.app.TitleScene",
@@ -100,8 +100,8 @@ tm.define("TitleScene", {
             height : SCREEN_HEIGHT
         });
 
-
-        this.title = tm.app.Sprite("title", SCREEN_WIDTH, SCREEN_HEIGHT).addChildTo(this);
+        
+        this.title = tm.app.Sprite("img_title", SCREEN_WIDTH, SCREEN_HEIGHT).addChildTo(this);
         this.title.position.set(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
 
@@ -266,10 +266,12 @@ tm.define("MainScene", {
                         this.vy = 10;
                         this.vx = (rand(200) -100) /10;
                         ball = balls(this.LR,this.vx * this.speed,this.vy * this.speed,0).addChildTo(ballGroup);
-                        //var audio = tm.sound.WebAudioManager.get("pon");
-                        //audio.volume = 0.5;
-                        //audio.play();
-                        this.btimer = 1;                            
+
+                        // // SE を鳴らす
+                        // var sound = tm.asset.Manager.get("se_pon").clone();
+                        // sound.play();
+
+                        this.btimer = 1;
 
                 }
 
