@@ -40,31 +40,17 @@ var UI_DATA = {
             },
             {
                 type: "tm.display.Sprite",
+                name: "scoreImage",
                 init: ["img_text_score"],
                 x: 320, y: 165,
+                visible: false,
             },
             {
                 type: "tm.display.Sprite",
+                name: "rankImage",
                 init: ["img_text_rank"],
                 x: 320, y: 311,
-            },
-            {
-                type: "tm.display.Sprite",
-                name: "btnTweet",
-                init: ["img_btn_tweet"],
-                x: 320, y: 455,
-            },
-            {
-                type: "tm.display.Sprite",
-                name: "btnTop",
-                init: ["img_btn_top"],
-                x: 320-100, y: 620,
-            },
-            {
-                type: "tm.display.Sprite",
-                name: "btnAgain",
-                init: ["img_btn_again"],
-                x: 320+100, y: 620,
+                visible: false,
             },
             
             {
@@ -75,6 +61,7 @@ var UI_DATA = {
                 align: "center",
                 fontSize: 64,
                 fillStyle: "black",
+                visible: false,
             },
             {
                 type: "tm.display.Label",
@@ -84,6 +71,7 @@ var UI_DATA = {
                 align: "center",
                 fontSize: 40,
                 fillStyle: "black",
+                visible: false,
             },
             {
                 type: "tm.display.Label",
@@ -94,43 +82,73 @@ var UI_DATA = {
                 fontSize: 24,
                 fontWeight: "bold",
                 fillStyle: "black",
+                visible: false,
             },
+            
             {
-                type: "tm.display.Label",
-                x: 365, y: 720,
-                text: "つくったひと:",
-                align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
-            },
-            {
-                type: "tm.display.Label",
-                x: 365, y: 770,
-                text: "音楽:",
-                align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
-            },
-            {
-                type: "tm.display.Label",
-                x: 365, y: 820,
-                text: "アプリ:",
-                align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
-            },
-            {
-                type: "tm.display.Label",
-                x: 385, y: 720,
-                text: "うちょ(ucho)",
-                align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
-            },
-            {
-                type: "tm.display.Label",
-                x: 385, y: 770,
-                text: "魔王魂",
-                align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
-            },
-            {
-                type: "tm.display.Label",
-                x: 385, y: 820,
-                text: "悠々自適",
-                align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
-            },
+                type: "tm.display.CanvasElement",
+                name: "ui",
+                visible: false,
+                children: [
+                    // button
+                    {
+                        type: "tm.display.Sprite",
+                        name: "btnTweet",
+                        init: ["img_btn_tweet"],
+                        x: 320, y: 455,
+                    },
+                    {
+                        type: "tm.display.Sprite",
+                        name: "btnTop",
+                        init: ["img_btn_top"],
+                        x: 320-100, y: 620,
+                    },
+                    {
+                        type: "tm.display.Sprite",
+                        name: "btnAgain",
+                        init: ["img_btn_again"],
+                        x: 320+100, y: 620,
+                    },
+
+                    {
+                        type: "tm.display.Label",
+                        x: 365, y: 720,
+                        text: "つくったひと:",
+                        align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                    },
+                    {
+                        type: "tm.display.Label",
+                        x: 365, y: 770,
+                        text: "音楽:",
+                        align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                    },
+                    {
+                        type: "tm.display.Label",
+                        x: 365, y: 820,
+                        text: "アプリ:",
+                        align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                    },
+                    {
+                        type: "tm.display.Label",
+                        x: 385, y: 720,
+                        text: "うちょ(ucho)",
+                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                    },
+                    {
+                        type: "tm.display.Label",
+                        x: 385, y: 770,
+                        text: "魔王魂",
+                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                    },
+                    {
+                        type: "tm.display.Label",
+                        x: 385, y: 820,
+                        text: "悠々自適",
+                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                    },
+
+                ],
+            }
         ]
     }
 };
