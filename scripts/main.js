@@ -1,66 +1,6 @@
 /*
- * constant
+ * main.js
  */
-var SCREEN_WIDTH   = 450;
-var SCREEN_HEIGHT   = 800;
-var SCREEN_CENTER_X = SCREEN_WIDTH/2;
-var SCREEN_CENTER_Y = SCREEN_HEIGHT/2;
-
-
-
-var UI_DATA = {
-    main: { // MainScene用ラベル
-        children: [{
-            type: "Label",
-            name: "score",
-            fontSize: 32,
-            fillStyle: "White",
-            shadowColor: "blue",
-            shadowBlur: 4,
-            x: 20,
-            y: 30,
-        }]
-
-    }
-};
-
-var ASSETS = {
-    "img_title":  "./images/title.png",
-
-    "se_pon": "./sounds/puu.wav",
-};
-var QUERY = tm.util.QueryString.parse(location.search.substr(1));
-
-var barsize;
-// 定数
-var ballsize   = 10;
-var bar;
-var block;
-var ball;
-var eball;
-
-var ballGroup;
-var eballGroup;
-var blockGroup;
-
-var point;
-var combo =0;
-var gameflg;
-
-
-var RESULT_PARAM = {
-        score: 0,
-        msg:      "守りたい。そのブロック",
-        url:      "http://cachacacha.com/BlockKUZUSAZU/",
-        hashtags: "ブロック崩さぬ",
-        width:    SCREEN_WIDTH,
-        height:   SCREEN_HEIGHT,
-        related:  "tmlib.js Tutorial testcording",
-};
-
-
-var speed;
-
 
 tm.main(function() {
     // app 生成 & 初期化
@@ -101,7 +41,7 @@ tm.define("TitleScene", {
         });
 
         
-        this.title = tm.app.Sprite("img_title", SCREEN_WIDTH, SCREEN_HEIGHT).addChildTo(this);
+        this.title = tm.app.Sprite("img_top", SCREEN_WIDTH, SCREEN_HEIGHT).addChildTo(this);
         this.title.position.set(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
 
@@ -157,7 +97,7 @@ tm.define("MainScene", {
         eballGroup = tm.app.CanvasElement().addChildTo(this);
         
         gameflg = 1;
-        barsize =45;
+        barsize =55;
         
         point = 0;
         combo = 0;
@@ -178,7 +118,7 @@ tm.define("MainScene", {
         this.danspeed = 0.1;
         this.dancnt = 0;        //弾幕カウント
         this.danend = 3;        //弾幕の回数
-        this.danvx_remit = 4.5;
+        this.danvx_remit = 5.0;
         this.dantimer = 0;
         this.danremit = 2;
 
@@ -205,10 +145,9 @@ tm.define("MainScene", {
                 block = blocks("hsla({0}, 80%, 50%, 0.75)".format(Bcr)).addChildTo(blockGroup);
                 block.x = fx;
                 block.y = fy;
-                fx += 55;
-
+                fx += BLOCK_WIDTH+5;
             }
-            fy += 25;
+            fy += BLOCK_HEIGHT+5;
             fx = 7;
             Bcr -= 40;
         }
@@ -422,7 +361,8 @@ tm.define("MainScene", {
                     }
 
                     if (this.gameovertimer > 70) {
-                        app.replaceScene(EndScene());
+                        app.pushScene(ResultScene());
+//                        app.replaceScene(EndScene());
                     }
 
 
@@ -453,8 +393,8 @@ var blocks = tm.createClass({
         this.superInit();
         
         this.color = color;
-        this.width = 55;
-        this.height = 25;
+        this.width = BLOCK_WIDTH;
+        this.height = BLOCK_HEIGHT;
 
         this.vx = 0;
         this.vy = 0;
@@ -482,7 +422,7 @@ var blocks = tm.createClass({
     draw: function(c) {
     c.globalCompositeOperation = "lighter";
     c.fillStyle = this.color;
-    c.fillRect(0, 0, 50, 20, 8);
+    c.fillRect(0, 0, this.width, this.height, 8);
     },
 
 });
@@ -504,13 +444,14 @@ var balls = tm.createClass({
         this.B;
 
         this.ballflg = ballflg;
-
+        
+        var offset = 30;
         if(LR == 0){
-                this.x = 30;
+                this.x = offset;
                 this.vx = vx;
         }
         else{
-                this.x = 420;
+                this.x = SCREEN_WIDTH-offset;
                 this.vx = vx * -1;
         }
         this.y =280;
@@ -626,7 +567,7 @@ var barclass = tm.createClass({
         
 
         this.color = color;
-        this.y = 650;
+        this.y = BAR_POSITION_Y;
         this.WD = 50;
         this.LWD = SCREEN_WIDTH / 2 - barsize;
         this.RWD = SCREEN_WIDTH / 2 + barsize;
@@ -661,13 +602,14 @@ var eballs = tm.createClass({
     init: function(LR,vx,vy) {
         this.superInit();
         this.v = tm.geom.Vector2(0, 0);
-
+        
+        var offset = 30;
         if(LR == 0){
-                this.x = 30;
+                this.x = offset;
                 this.v.x = vx;
         }
         else{
-                this.x = 420;
+                this.x = SCREEN_WIDTH-offset;
                 this.v.x = vx * -1;
         }
         this.y =280;
