@@ -12,7 +12,7 @@ tm.define("MainScene", {
         this.superInit();
 
         // bgm 再生
-        playMusic("bgm_main");
+        playMusic("bgm_game");
 
         blockGroup = tm.app.CanvasElement().addChildTo(this);
         //ボールグループ作成
@@ -190,7 +190,7 @@ tm.define("MainScene", {
                     this.bonusSprite.show().wakeUp();
                     // bgm を変更する
                     playMusic("bgm_bonus");
-                    stopMusic("bgm_main");
+                    stopMusic("bgm_game");
                 }
 
                 ++this.timer;
@@ -252,7 +252,7 @@ tm.define("MainScene", {
                 this.etimer++;
 
                 if(this.etimer > 500){
-                    playMusic("bgm_main");
+                    playMusic("bgm_game");
                     stopMusic("bgm_bonus");
 
                 	this.bonusSprite.hide();
@@ -435,7 +435,7 @@ var balls = tm.createClass({
                     this.flg = 1;
 
                     // se
-                    playSound("se_combo");
+                    playSound("se_pi");
                 }
             }
             else{

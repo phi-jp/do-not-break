@@ -196,12 +196,11 @@ var ASSETS = {
     "img_bonus": PATH_FORMAT_IMAGES.format("bonus.png"),
 
     // sounds
-    "bgm_main": PATH_FORMAT_SOUNDS.format("bgm_main.mp3"),
+    "bgm_game": PATH_FORMAT_SOUNDS.format("bgm_game.mp3"),
     "bgm_bonus": PATH_FORMAT_SOUNDS.format("bgm_bonus.mp3"),
-    "se_combo": PATH_FORMAT_SOUNDS.format("se_combo.wav"),
     "se_hit_block": PATH_FORMAT_SOUNDS.format("se_hit_block.wav"),
     "se_gameover": PATH_FORMAT_SOUNDS.format("se_gameover.wav"),
-    "se_popup": PATH_FORMAT_SOUNDS.format("se_popup.wav"),
+    "se_show": PATH_FORMAT_SOUNDS.format("se_show.wav"),
     "se_pon": PATH_FORMAT_SOUNDS.format("se_pon.wav"),
     "se_pi": PATH_FORMAT_SOUNDS.format("se_pi.wav"),
 
@@ -245,6 +244,7 @@ var speed;
 
 
 var playSound = function(name) {
+    console.log(name);
     if (yyjtk.isWebView()) {
         yyjtk.api.playSound(name);
     }

@@ -11,7 +11,7 @@ tm.define("ResultScene", {
     init: function(param) {
         this.superInit();
 
-        playSound("se_popup");
+        playSound("se_show");
         
         this.fromJSON(UI_DATA.result);
         
@@ -129,7 +129,7 @@ tm.define("ResultScene", {
             this.rankLabel.show();
             this.rankImage.show();
             this.update = this.incrementRank;
-            playSound("se_popup");
+            playSound("se_show");
         }
     },
     
@@ -148,7 +148,7 @@ tm.define("ResultScene", {
             
             // メッセージをフェードイン
             this.fadeMessage();
-            playSound("se_popup");
+            playSound("se_show");
         }
     },
     

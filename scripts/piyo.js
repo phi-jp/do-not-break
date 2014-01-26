@@ -2,7 +2,7 @@
 var yyjtk = {};
 
 ;(function() {
-	var PROTOCOL = "yyjtk://";
+	var PROTOCOL = "piyo://";
 	var QUERY = tm.util.QueryString.parse(location.search.substr(1));
 
 	yyjtk.isWebView = function() {
