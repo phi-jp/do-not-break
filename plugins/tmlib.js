@@ -16512,9 +16512,9 @@ tm.ui = tm.ui || {};
             param = {}.$extend(DEFAULT_PARAM, param);
             
             this.bg = tm.display.Shape(param.width, param.height).addChildTo(this);
-            this.bg.canvas.clearColor("hsla(200, 80%, 70%, 1.0)");
+            this.bg.canvas.clearColor("hsla(200, 80%, 70%, 0.0)");
             this.bg.setOrigin(0, 0);
-            
+
             var label = tm.display.Label("Loading");
             label.x = param.width/2;
             label.y = param.height/2;

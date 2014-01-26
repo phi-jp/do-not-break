@@ -17,10 +17,11 @@ tm.main(function() {
     var sceneName = QUERY.scene || "MainScene";
 
     // ローディングシーンを生成
-    var loading = tm.app.LoadingScene({
+    var loading = tm.ui.LoadingScene({
         assets: ASSETS,
         width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT
+        height: SCREEN_HEIGHT,
+        bgColor: "red",
     });
     // ロード完了時イベントリスナを登録
     loading.onload = function() {
@@ -60,8 +61,6 @@ tm.define("TitleScene", {
             // シーンの遷移
             e.app.replaceScene(MainScene());
         });
-
-
     },
 });
 
