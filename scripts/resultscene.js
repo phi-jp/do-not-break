@@ -10,6 +10,8 @@ tm.define("ResultScene", {
     
     init: function(param) {
         this.superInit();
+
+        playSound("se_popup");
         
         this.fromJSON(UI_DATA.result);
         
@@ -109,6 +111,7 @@ tm.define("ResultScene", {
         var p = app.pointing;
         
         this.score += 7;
+        playSound("se_pi");
 
         if (p.getPointingStart() == false && point >= this.score) {
             this.scoreLabel.text = this.score;
@@ -126,6 +129,7 @@ tm.define("ResultScene", {
         var p = app.pointing;
         
         this.rank += 1;
+        playSound("se_pi");
         
         if (p.getPointingStart() == false && rank >= this.rank) {
             this.rankLabel.text = this.rank + "位";

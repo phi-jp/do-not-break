@@ -192,6 +192,16 @@ var ASSETS = {
     "img_text_score": "images/text_score.png",
     "img_bonus": "images/bonus.png",
 
+    // sounds
+    "bgm_main": "sounds/bgm_main.mp3",
+    "bgm_bonus": "sounds/bgm_bonus.mp3",
+    "se_combo": "sounds/se_combo.wav",
+    "se_hit_block": "sounds/se_hit_block.wav",
+    "se_gameover": "sounds/se_gameover.wav",
+    "se_popup": "sounds/se_popup.wav",
+    "se_pon": "sounds/se_pon.wav",
+    "se_pi": "sounds/se_pi.wav",
+
     // TODO: 消す
     "img_top": "images/ss/block_top.png",
     "img_result": "images/ss/block_result.png",
@@ -240,7 +250,7 @@ var playSound = function(name) {
     }
 };
 
-var playMusic = function() {
+var playMusic = function(name) {
     if (yyjtk.isWebView()) {
         yyjtk.api.playMusic(name);
     }
@@ -249,6 +259,14 @@ var playMusic = function() {
     }
 };
 
+var stopMusic = function(name) {
+    if (yyjtk.isWebView()) {
+        yyjtk.api.stopMusic(name);
+    }
+    else {
+        tm.asset.Manager.get(name).stop();
+    }
+};
 
 
 

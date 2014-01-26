@@ -11,6 +11,9 @@ tm.define("MainScene", {
         // 親の初期化
         this.superInit();
 
+        // bgm 再生
+        playMusic("bgm_main");
+
         blockGroup = tm.app.CanvasElement().addChildTo(this);
         //ボールグループ作成
         ballGroup = tm.app.CanvasElement().addChildTo(this);
@@ -182,6 +185,12 @@ tm.define("MainScene", {
                     this.nextmode = 3;
                     this.ebouns += 500;
                     this.timer = 1;
+
+                    // ボーナススプライトを表示
+                    this.bonusSprite.show().wakeUp();
+                    // bgm を変更する
+                    playMusic("bgm_bonus");
+                    stopMusic("bgm_main");
                 }
 
                 ++this.timer;
@@ -233,8 +242,6 @@ tm.define("MainScene", {
             //入れ食いモード
             case 3:
                 barsize = 80;
-
-                this.bonusSprite.show().wakeUp();
                 
                 if (this.etimer % 2 === 0) {
                         this.LR = rand(1);
@@ -245,6 +252,9 @@ tm.define("MainScene", {
                 this.etimer++;
 
                 if(this.etimer > 500){
+                    playMusic("bgm_main");
+                    stopMusic("bgm_bonus");
+
                 	this.bonusSprite.hide();
                     
                     this.etimer = 1;
@@ -424,6 +434,8 @@ var balls = tm.createClass({
                     combo++;
                     this.flg = 1;
 
+                    // se
+                    playSound("se_combo");
                 }
             }
             else{
@@ -436,6 +448,8 @@ var balls = tm.createClass({
                 this.color = "hsla(360, 75%, 50%, 0.8)";
                 }
 
+                // 跳ね返り
+                playSound("se_pon");
             }
         }
 
@@ -448,6 +462,8 @@ var balls = tm.createClass({
                 self.vx *= -1;
                 block.remove();
                 self.ballflg++;
+
+                playSound("se_hit_block");
                }
              
         });
@@ -468,6 +484,9 @@ var balls = tm.createClass({
             //ゲームオーバーフラグ
             gameflg = 0;
             this.remove();
+
+            // game over se
+            playSound("se_gameover");
         }
 
         //ブロックに２回あたったら消える
@@ -582,7 +601,6 @@ var eballs = tm.createClass({
                     point += 50 + combo;
                     combo++;
                     this.flg = 1;
-
                 }
             }
             else{
