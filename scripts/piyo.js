@@ -3,11 +3,6 @@ var yyjtk = {};
 
 ;(function() {
 	var PROTOCOL = "piyo://";
-	var QUERY = tm.util.QueryString.parse(location.search.substr(1));
-
-	yyjtk.isWebView = function() {
-		return QUERY.env == "webview";
-	};
 
     var iframe = document.createElement('iframe');
     iframe.style.display = 'none';
@@ -24,7 +19,7 @@ var yyjtk = {};
         
         var uri = request_queue.shift();
         
-        if (yyjtk.isWebView()) {
+        if (isNative()) {
 	        iframe.contentWindow.location = uri;
         }
         else {
@@ -66,7 +61,7 @@ var yyjtk = {};
          */
         sendScore: function(id, score, callback) {
 
-            if (yyjtk.isWebView()) {
+            if (isNative()) {
 	        	var param = {
 	        		id: id,
 	        		score: score,
@@ -84,7 +79,7 @@ var yyjtk = {};
          */
         getRanking: function(id, callback) {
 
-            if (yyjtk.isWebView()) {
+            if (isNative()) {
 	        	var param = {
 	        		id: id,
 	        		callback: callback,
@@ -151,7 +146,7 @@ var yyjtk = {};
         },
 
         getLanguage: function(callback) {
-            if (yyjtk.isWebView()) {
+            if (isNative()) {
                 callback = this.setCallbackFunction(callback);
                 var param = {
                     callback: callback,

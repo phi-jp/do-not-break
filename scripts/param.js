@@ -15,8 +15,6 @@ var BLOCK_HEIGHT = 25;
 
 var BAR_POSITION_Y = 700;
 
-var PATH_FORMAT_IMAGES = "images/{0}";
-var PATH_FORMAT_SOUNDS = "sounds/{0}";
 var LANGUAGE = "ja";
 
 var UI_DATA = {
@@ -244,8 +242,7 @@ var speed;
 
 
 var playSound = function(name) {
-    console.log(name);
-    if (yyjtk.isWebView()) {
+    if (isNative()) {
         yyjtk.api.playSound(name);
     }
     else {
@@ -254,7 +251,7 @@ var playSound = function(name) {
 };
 
 var playMusic = function(name) {
-    if (yyjtk.isWebView()) {
+    if (isNative()) {
         yyjtk.api.playMusic(name);
     }
     else {
@@ -263,7 +260,7 @@ var playMusic = function(name) {
 };
 
 var stopMusic = function(name) {
-    if (yyjtk.isWebView()) {
+    if (isNative()) {
         yyjtk.api.stopMusic(name);
     }
     else {
