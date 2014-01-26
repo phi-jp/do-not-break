@@ -25,7 +25,7 @@ var yyjtk = {};
         else {
         	console.log(uri);
         }
-    }, 100);
+    }, 50);
 
     yyjtk.api = {
     	exec: function(uri) {
@@ -42,6 +42,12 @@ var yyjtk = {};
 
     		this.exec("playSound?" + tm.util.QueryString.stringify(param));
     	},
+        /**
+         * サウンドを停止する
+         */
+        stopSound: function() {
+            this.exec("stopSound");
+        },
     	playMusic: function(name, param) {
     		param = param || {};
 

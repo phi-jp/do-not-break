@@ -11,6 +11,8 @@ tm.define("ResultScene", {
     init: function(param) {
         this.superInit();
 
+        stopMusic("bgm_game");
+
         playSound("se_show");
         
         this.fromJSON(UI_DATA.result);

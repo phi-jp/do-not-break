@@ -309,7 +309,7 @@ tm.define("MainScene", {
                         });
                     }
 
-                    if (this.gameovertimer > 70) {
+                    if (this.gameovertimer > 100) {
                         app.pushScene(ResultScene());
 //                        app.replaceScene(EndScene());
                     }

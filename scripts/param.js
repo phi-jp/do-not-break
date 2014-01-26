@@ -249,6 +249,14 @@ var playSound = function(name) {
         tm.asset.Manager.get(name).clone().play();
     }
 };
+var stopSound = function(name) {
+    if (isNative()) {
+        yyjtk.api.stopSound(name);
+    }
+    else {
+        tm.asset.Manager.get(name).stop();
+    }
+};
 
 var playMusic = function(name) {
     if (isNative()) {
