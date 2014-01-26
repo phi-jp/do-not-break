@@ -22,9 +22,9 @@ var yyjtk = {};
     setInterval(function() {
     	if (request_queue.length == 0) return ;
         
-        var uri = edu_native_queue.shift();
+        var uri = request_queue.shift();
         
-        if (isWebView()) {
+        if (yyjtk.isWebView()) {
 	        iframe.contentWindow.location = uri;
         }
         else {
@@ -105,10 +105,22 @@ var yyjtk = {};
         	params.via = params.via || "";
         	params.hashtags = params.hashtags || "";
 
+        	if (params.hashtags) {
+        		var tagsArr = params.hashtags.split(',');
+        		var tags = [];
+        		tagsArr.each(function(elm) {
+        			tags.push("#" + elm);
+        		});
+        		params.hashtags = tags.join(' ');
+        	}
+        	else {
+        		params.hashtags = "";
+        	}
+
         	var finalText = "{text} via @{via} {hashtags}".format(params);
         	var param = {
         		text: finalText,
-        		url: url,
+        		url: params.url || '',
         	};
 
             this.exec("twitter?" + tm.util.QueryString.stringify(param));

@@ -10,7 +10,6 @@ tm.define("ResultScene", {
     init: function(param) {
         this.superInit();
         
-        
         this.fromJSON(UI_DATA.result);
         
         this.scoreLabel.text = point || 0;
@@ -25,11 +24,42 @@ tm.define("ResultScene", {
         this.rank = 0;
         
         // スコア表示
-        this.tweener.wait(500).call(function() {
+        this.tweener.wait(128).call(function() {
             this.scoreLabel.show();
             this.scoreImage.show();
             this.update = this.incrementScore;
         }.bind(this));
+
+        // tweet
+        this.ui.btnTweet
+            .setInteractive(true)
+            .setBoundingType("rect")
+            .on("pointingstart", function() {
+                yyjtk.api.sendTwitter({
+                    text: "SCORE: {0}, 守りたい。そのブロック ".format(point),
+                    via: "utyo",
+                    hashtags: "ブロック崩さぬ",
+                    url: "http://cachacacha.com"
+                });
+            });
+        this.ui.btnTitle
+            .setInteractive(true)
+            .setBoundingType("rect")
+            .on("pointingstart", function() {
+                var app = this.app;
+
+                yyjtk.api.closeView();
+            }.bind(this));
+        // コンティニュー
+        this.ui.btnContinue
+            .setInteractive(true)
+            .setBoundingType("rect")
+            .on("pointingstart", function() {
+                var app = this.app;
+
+                app.popScene();
+                app.replaceScene(MainScene());
+            }.bind(this));
     },
     
     incrementScore: function(app) {

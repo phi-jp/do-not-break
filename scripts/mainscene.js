@@ -81,11 +81,16 @@ tm.define("MainScene", {
         this.fromJSON(UI_DATA.main);
         this.score.text = point;
 
+        // ボーナス
+        this.bonusSprite = tm.display.Sprite("img_bonus").addChildTo(this);
+        this.bonusSprite.setPosition(SCREEN_CENTER_X, 400);
+        this.bonusSprite.hide().sleep();
+        this.bonusSprite.tweener.set({alpha:0}).wait(200).set({alpha:1}).wait(200).setLoop(true);
 
         //コンボ数表示
         this.Combolabel = tm.app.Label("").addChildTo(this);
         this.Combolabel
-            .setPosition(40, 500)
+            .setPosition(40, 480)
             .setFillStyle("hsla(123, 80%, 50%, 8.0)")
             .setFontSize(40);
 
@@ -228,7 +233,8 @@ tm.define("MainScene", {
             //入れ食いモード
             case 3:
                 barsize = 80;
-                this.mode.text = "入れ食い\nボーナス！！！"
+
+                this.bonusSprite.show().wakeUp();
                 
                 if (this.etimer % 2 === 0) {
                         this.LR = rand(1);
@@ -239,14 +245,13 @@ tm.define("MainScene", {
                 this.etimer++;
 
                 if(this.etimer > 500){
+                	this.bonusSprite.hide();
                     
                     this.etimer = 1;
                     this.mode.text = "";
                     barsize = 45;
                     gameflg = 9;
                     this.nextmode = 1;
-
-
                 }
 
 

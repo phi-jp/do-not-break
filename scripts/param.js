@@ -100,13 +100,13 @@ var UI_DATA = {
                     },
                     {
                         type: "tm.display.Sprite",
-                        name: "btnTop",
+                        name: "btnTitle",
                         init: ["img_btn_top"],
                         x: 320-100, y: 620,
                     },
                     {
                         type: "tm.display.Sprite",
-                        name: "btnAgain",
+                        name: "btnContinue",
                         init: ["img_btn_again"],
                         x: 320+100, y: 620,
                     },
@@ -162,6 +162,7 @@ var ASSETS = {
     "img_btn_tweet": "images/btn_tweet.png",
     "img_text_rank": "images/text_rank.png",
     "img_text_score": "images/text_score.png",
+    "img_bonus": "images/bonus.png",
 
     "se_pon": "./sounds/puu.wav",
     
