@@ -2,7 +2,8 @@
  * result scene
  */
 
-rank = 430;
+// point = 3003;
+// rank = 430;
 
 tm.define("ResultScene", {
     superClass: "tm.app.Scene",
@@ -16,12 +17,21 @@ tm.define("ResultScene", {
         this.messageLabel.alpha = 0;
         this.ui.hide().sleep();
         
-        var ss = tm.display.Sprite("img_result").addChildTo(this).setOrigin(0, 0);
-        ss.alpha = 0.0;
-        ss.y += 60;
+        // var ss = tm.display.Sprite("img_result").addChildTo(this).setOrigin(0, 0);
+        // ss.alpha = 0.5;
+        // ss.y += 60;
         
         this.score = 0;
         this.rank = 0;
+
+        var comment = (LANGUAGE == "ja") ?
+            "守りたい。そのブロック" : "Want to defence. The block.";
+        var hashtags = (LANGUAGE == "ja") ?
+            "ブロック崩さぬ" : "breakguard";
+        var message = "SCORE: {0}, {1} ".format(point, comment);
+        var url = "http://cachacacha.com";
+
+        this.messageLabel.text = comment;
 
         // tweet
         this.ui.btnTweet
@@ -29,18 +39,38 @@ tm.define("ResultScene", {
             .setBoundingType("rect")
             .on("pointingstart", function() {
                 yyjtk.api.sendTwitter({
-                    text: "SCORE: {0}, 守りたい。そのブロック ".format(point),
+                    text: message,
                     via: "utyo",
-                    hashtags: "ブロック崩さぬ",
-                    url: "http://cachacacha.com"
+                    hashtags: hashtags,
+                    url: url
                 });
             });
+        // facebook
+        this.ui.btnFacebook
+            .setInteractive(true)
+            .setBoundingType("rect")
+            .on("pointingstart", function() {
+                yyjtk.api.sendFacebook({
+                    text: message,
+                    url: url
+                });
+            });
+        // line
+        this.ui.btnLine
+            .setInteractive(true)
+            .setBoundingType("rect")
+            .on("pointingstart", function() {
+                yyjtk.api.sendLine({
+                    text: message,
+                    url: url
+                });
+            });
+
         this.ui.btnTitle
             .setInteractive(true)
             .setBoundingType("rect")
             .on("pointingstart", function() {
                 var app = this.app;
-
                 yyjtk.api.closeView();
             }.bind(this));
         // コンティニュー
@@ -52,6 +82,13 @@ tm.define("ResultScene", {
 
                 app.popScene();
                 app.replaceScene(MainScene());
+            }.bind(this));
+        // ランキング
+        this.ui.btnRanking
+            .setInteractive(true)
+            .setBoundingType("rect")
+            .on("pointingstart", function() {
+                yyjtk.api.viewRanking(RANKING_ID);
             }.bind(this));
 
         // ランキング送信

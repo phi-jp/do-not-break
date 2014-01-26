@@ -8,6 +8,11 @@ tm.main(function() {
     app.resize(SCREEN_WIDTH, SCREEN_HEIGHT);
     app.fitWindow();
 
+    var flow = tm.util.Flow(2, function() {
+        var scene = tm.global[sceneName]();
+        app.replaceScene(scene);
+    });
+
     // query(http://...?{~}) からシーン名を取得
     var sceneName = QUERY.scene || "MainScene";
 
@@ -19,11 +24,16 @@ tm.main(function() {
     });
     // ロード完了時イベントリスナを登録
     loading.onload = function() {
-        var scene = tm.global[sceneName]();
-        app.replaceScene(scene);
+        flow.pass();
     };
     // シーンきりかえ
     app.replaceScene(loading);
+
+    // 言語取得
+    yyjtk.api.getLanguage(function(lang) {
+        LANGUAGE = lang;
+        flow.pass();
+    });
     
     // 実行
     app.run();

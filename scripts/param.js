@@ -14,6 +14,7 @@ var BLOCK_WIDTH  = 74;
 var BLOCK_HEIGHT = 25;
 
 var BAR_POSITION_Y = 700;
+var LANGUAGE = "ja";
 
 var UI_DATA = {
     main: { // MainScene用ラベル
@@ -45,41 +46,44 @@ var UI_DATA = {
                 type: "tm.display.Sprite",
                 name: "scoreImage",
                 init: ["img_text_score"],
-                x: 320, y: 165,
+                x: 320, y: 150,
                 visible: false,
             },
             {
                 type: "tm.display.Sprite",
                 name: "rankImage",
                 init: ["img_text_rank"],
-                x: 320, y: 311,
+                x: 320, y: 270,
                 visible: false,
             },
             
+            // スコア
             {
                 type: "tm.display.Label",
                 name: "scoreLabel",
-                x: 320, y: 250,
+                x: 320, y: 225,
                 text: " ",
                 align: "center",
-                fontSize: 64,
+                fontSize: 46,
                 fillStyle: "black",
+                fontWeight: "bold",
                 visible: false,
             },
             {
                 type: "tm.display.Label",
                 name: "rankLabel",
-                x: 320, y: 380,
+                x: 320, y: 350,
                 text: "位",
                 align: "center",
                 fontSize: 40,
                 fillStyle: "black",
+                fontWeight: "bold",
                 visible: false,
             },
             {
                 type: "tm.display.Label",
                 name: "messageLabel",
-                x: 320, y: 550,
+                x: 320, y: 405,
                 text: "守りたい。そのブロック",
                 align: "center",
                 fontSize: 24,
@@ -93,24 +97,44 @@ var UI_DATA = {
                 name: "ui",
                 visible: false,
                 children: [
-                    // button
+                    // social button
                     {
                         type: "tm.display.Sprite",
                         name: "btnTweet",
                         init: ["img_btn_tweet"],
-                        x: 320, y: 455,
+                        x: 320-150, y: 470,
                     },
                     {
                         type: "tm.display.Sprite",
+                        name: "btnFacebook",
+                        init: ["img_btn_facebook"],
+                        x: 320, y: 470,
+                    },
+                    {
+                        type: "tm.display.Sprite",
+                        name: "btnLine",
+                        init: ["img_btn_line"],
+                        x: 320+150, y: 470,
+                    },
+
+                    // title and continue and ranking
+                    {
+                        type: "tm.display.Sprite",
                         name: "btnTitle",
-                        init: ["img_btn_top"],
-                        x: 320-100, y: 620,
+                        init: ["img_btn_title"],
+                        x: 320-100, y: 560,
                     },
                     {
                         type: "tm.display.Sprite",
                         name: "btnContinue",
-                        init: ["img_btn_again"],
-                        x: 320+100, y: 620,
+                        init: ["img_btn_continue"],
+                        x: 320+100, y: 560,
+                    },
+                    {
+                        type: "tm.display.Sprite",
+                        name: "btnRanking",
+                        init: ["img_btn_ranking"],
+                        x: 320, y: 635,
                     },
 
                     {
@@ -157,17 +181,17 @@ var UI_DATA = {
 };
 
 var ASSETS = {
-    "img_btn_again": "images/btn_again.png",
-    "img_btn_rank": "images/btn_rank.png",
+    "img_btn_continue": "images/btn_continue.png",
+    "img_btn_ranking": "images/btn_ranking.png",
     "img_btn_start": "images/btn_start.png",
-    "img_btn_top": "images/btn_top.png",
+    "img_btn_title": "images/btn_title.png",
     "img_btn_tweet": "images/btn_tweet.png",
+    "img_btn_line": "images/btn_line.png",
+    "img_btn_facebook": "images/btn_facebook.png",
     "img_text_rank": "images/text_rank.png",
     "img_text_score": "images/text_score.png",
     "img_bonus": "images/bonus.png",
 
-    "se_pon": "./sounds/puu.wav",
-    
     // TODO: 消す
     "img_top": "images/ss/block_top.png",
     "img_result": "images/ss/block_result.png",

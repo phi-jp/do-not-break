@@ -113,29 +113,54 @@ var yyjtk = {};
          * url ... 
          */
         sendTwitter: function(params) {
-        	params.text = params.text || "";
-        	params.via = params.via || "";
-        	params.hashtags = params.hashtags || "";
+            params.text = params.text || "";
+            params.via = params.via || "";
+            params.hashtags = params.hashtags || "";
 
-        	if (params.hashtags) {
-        		var tagsArr = params.hashtags.split(',');
-        		var tags = [];
-        		tagsArr.each(function(elm) {
-        			tags.push("#" + elm);
-        		});
-        		params.hashtags = tags.join(' ');
-        	}
-        	else {
-        		params.hashtags = "";
-        	}
+            if (params.hashtags) {
+                var tagsArr = params.hashtags.split(',');
+                var tags = [];
+                tagsArr.each(function(elm) {
+                    tags.push("#" + elm);
+                });
+                params.hashtags = tags.join(' ');
+            }
+            else {
+                params.hashtags = "";
+            }
 
-        	var finalText = "{text} via @{via} {hashtags}".format(params);
-        	var param = {
-        		text: finalText,
-        		url: params.url || '',
-        	};
+            var finalText = "{text} via @{via} {hashtags}".format(params);
+            var param = {
+                text: finalText,
+                url: params.url || '',
+            };
 
             this.exec("twitter?" + tm.util.QueryString.stringify(param));
+        },
+        sendFacebook: function(param) {
+            param.text = param.text || "";
+            param.url = param.url || "";
+
+            this.exec("facebook?" + tm.util.QueryString.stringify(param));
+        },
+        sendLine: function(param) {
+            param.text = param.text || "";
+            param.url = param.url || "";
+
+            this.exec("line?" + tm.util.QueryString.stringify(param));
+        },
+
+        getLanguage: function(callback) {
+            if (yyjtk.isWebView()) {
+                callback = this.setCallbackFunction(callback);
+                var param = {
+                    callback: callback,
+                };
+                this.exec( "getLanguage?" + tm.util.QueryString.stringify(param) );
+            }
+            else {
+                callback && callback("en"); // or ja
+            }
         },
 
         setCallbackFunction: function(callback) {
