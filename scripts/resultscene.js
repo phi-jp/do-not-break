@@ -76,7 +76,7 @@ tm.define("ResultScene", {
     fadeUI: function() {
         this.ui.show().wakeUp();
         this.ui.alpha = 0;
-        this.ui.tweener.wait(500).fadeIn(500);
+        this.ui.tweener.wait(500).fadeIn(10);
     },
     
     onpointingstart: function(e) {

@@ -22,8 +22,9 @@ var UI_DATA = {
             fillStyle: "White",
             shadowColor: "blue",
             shadowBlur: 4,
-            x: 20,
+            x: 10,
             y: 30,
+            baseline: "middle",
         }]
     },
     result: {
@@ -199,3 +200,28 @@ var RESULT_PARAM = {
 
 
 var speed;
+
+
+
+
+var playSound = function(name) {
+    if (yyjtk.isWebView()) {
+        yyjtk.api.playSound(name);
+    }
+    else {
+        tm.asset.Manager.get(name).clone().play();
+    }
+};
+
+var playMusic = function() {
+    if (yyjtk.isWebView()) {
+        yyjtk.api.playMusic(name);
+    }
+    else {
+        tm.asset.Manager.get(name).setLoop(true).play();
+    }
+};
+
+
+
+
