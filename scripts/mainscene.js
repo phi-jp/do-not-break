@@ -435,7 +435,7 @@ var balls = tm.createClass({
                     this.flg = 1;
 
                     // se
-                    playSound("se_pi");
+                    // playSound("se_pi");
                 }
             }
             else{
