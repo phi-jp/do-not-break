@@ -46,6 +46,7 @@ tm.define("ResultScene", {
                     hashtags: hashtags,
                     url: url
                 });
+                playSound("se_pi");
             });
         // facebook
         this.ui.btnFacebook
@@ -56,6 +57,7 @@ tm.define("ResultScene", {
                     text: message,
                     url: url
                 });
+                playSound("se_pi");
             });
         // line
         this.ui.btnLine
@@ -66,6 +68,7 @@ tm.define("ResultScene", {
                     text: message,
                     url: url
                 });
+                playSound("se_pi");
             });
 
         this.ui.btnTitle
@@ -74,6 +77,7 @@ tm.define("ResultScene", {
             .on("pointingstart", function() {
                 var app = this.app;
                 yyjtk.api.closeView();
+                playSound("se_pi");
             }.bind(this));
         // コンティニュー
         this.ui.btnContinue
@@ -84,6 +88,7 @@ tm.define("ResultScene", {
 
                 app.popScene();
                 app.replaceScene(MainScene());
+                playSound("se_pi");
             }.bind(this));
         // ランキング
         this.ui.btnRanking
@@ -91,6 +96,7 @@ tm.define("ResultScene", {
             .setBoundingType("rect")
             .on("pointingstart", function() {
                 yyjtk.api.viewRanking(RANKING_ID);
+                playSound("se_pi");
             }.bind(this));
 
         // ランキング送信
@@ -111,7 +117,8 @@ tm.define("ResultScene", {
         var p = app.pointing;
         
         this.score += 7;
-        playSound("se_pi");
+
+        if (app.frame % 4 == 0) { playSound("se_pi"); }
 
         if (p.getPointingStart() == false && point >= this.score) {
             this.scoreLabel.text = this.score;
@@ -122,6 +129,7 @@ tm.define("ResultScene", {
             this.rankLabel.show();
             this.rankImage.show();
             this.update = this.incrementRank;
+            playSound("se_popup");
         }
     },
     
@@ -129,7 +137,7 @@ tm.define("ResultScene", {
         var p = app.pointing;
         
         this.rank += 1;
-        playSound("se_pi");
+        if (app.frame % 4 == 0) { playSound("se_pi"); }
         
         if (p.getPointingStart() == false && rank >= this.rank) {
             this.rankLabel.text = this.rank + "位";
@@ -140,6 +148,7 @@ tm.define("ResultScene", {
             
             // メッセージをフェードイン
             this.fadeMessage();
+            playSound("se_popup");
         }
     },
     

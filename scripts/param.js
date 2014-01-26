@@ -14,6 +14,9 @@ var BLOCK_WIDTH  = 74;
 var BLOCK_HEIGHT = 25;
 
 var BAR_POSITION_Y = 700;
+
+var PATH_FORMAT_IMAGES = "images/{0}";
+var PATH_FORMAT_SOUNDS = "sounds/{0}";
 var LANGUAGE = "ja";
 
 var UI_DATA = {
@@ -181,30 +184,30 @@ var UI_DATA = {
 };
 
 var ASSETS = {
-    "img_btn_continue": "images/btn_continue.png",
-    "img_btn_ranking": "images/btn_ranking.png",
-    "img_btn_start": "images/btn_start.png",
-    "img_btn_title": "images/btn_title.png",
-    "img_btn_tweet": "images/btn_tweet.png",
-    "img_btn_line": "images/btn_line.png",
-    "img_btn_facebook": "images/btn_facebook.png",
-    "img_text_rank": "images/text_rank.png",
-    "img_text_score": "images/text_score.png",
-    "img_bonus": "images/bonus.png",
+    "img_btn_continue": PATH_FORMAT_IMAGES.format("btn_continue.png"),
+    "img_btn_ranking": PATH_FORMAT_IMAGES.format("btn_ranking.png"),
+    "img_btn_start": PATH_FORMAT_IMAGES.format("btn_start.png"),
+    "img_btn_title": PATH_FORMAT_IMAGES.format("btn_title.png"),
+    "img_btn_tweet": PATH_FORMAT_IMAGES.format("btn_tweet.png"),
+    "img_btn_line": PATH_FORMAT_IMAGES.format("btn_line.png"),
+    "img_btn_facebook": PATH_FORMAT_IMAGES.format("btn_facebook.png"),
+    "img_text_rank": PATH_FORMAT_IMAGES.format("text_rank.png"),
+    "img_text_score": PATH_FORMAT_IMAGES.format("text_score.png"),
+    "img_bonus": PATH_FORMAT_IMAGES.format("bonus.png"),
 
     // sounds
-    "bgm_main": "sounds/bgm_main.mp3",
-    "bgm_bonus": "sounds/bgm_bonus.mp3",
-    "se_combo": "sounds/se_combo.wav",
-    "se_hit_block": "sounds/se_hit_block.wav",
-    "se_gameover": "sounds/se_gameover.wav",
-    "se_popup": "sounds/se_popup.wav",
-    "se_pon": "sounds/se_pon.wav",
-    "se_pi": "sounds/se_pi.wav",
+    "bgm_main": PATH_FORMAT_SOUNDS.format("bgm_main.mp3"),
+    "bgm_bonus": PATH_FORMAT_SOUNDS.format("bgm_bonus.mp3"),
+    "se_combo": PATH_FORMAT_SOUNDS.format("se_combo.wav"),
+    "se_hit_block": PATH_FORMAT_SOUNDS.format("se_hit_block.wav"),
+    "se_gameover": PATH_FORMAT_SOUNDS.format("se_gameover.wav"),
+    "se_popup": PATH_FORMAT_SOUNDS.format("se_popup.wav"),
+    "se_pon": PATH_FORMAT_SOUNDS.format("se_pon.wav"),
+    "se_pi": PATH_FORMAT_SOUNDS.format("se_pi.wav"),
 
-    // TODO: 消す
-    "img_top": "images/ss/block_top.png",
-    "img_result": "images/ss/block_result.png",
+    // // TODO: 消す
+    // "img_top": PATH_FORMAT_IMAGES.format("ss/block_top.png"),
+    // "img_result": PATH_FORMAT_IMAGES.format("ss/block_result.png"),
 };
 var QUERY = tm.util.QueryString.parse(location.search.substr(1));
 
