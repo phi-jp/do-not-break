@@ -12,7 +12,7 @@ tm.define("ResultScene", {
         
         this.fromJSON(UI_DATA.result);
         
-        this.scoreLabel.text = point || 0;
+        this.scoreLabel.text = 0;
         this.messageLabel.alpha = 0;
         this.ui.hide().sleep();
         
@@ -22,13 +22,6 @@ tm.define("ResultScene", {
         
         this.score = 0;
         this.rank = 0;
-        
-        // スコア表示
-        this.tweener.wait(128).call(function() {
-            this.scoreLabel.show();
-            this.scoreImage.show();
-            this.update = this.incrementScore;
-        }.bind(this));
 
         // tweet
         this.ui.btnTweet
@@ -60,13 +53,26 @@ tm.define("ResultScene", {
                 app.popScene();
                 app.replaceScene(MainScene());
             }.bind(this));
+
+        // ランキング送信
+        var self = this;
+        yyjtk.api.sendScore(RANKING_ID, point, function() {
+            yyjtk.api.getRanking(RANKING_ID, function(ranking) {
+                rank = ranking;
+
+                self.scoreLabel.show();
+                self.scoreImage.show();
+                self.update = self.incrementScore;
+            });
+        });
+        
     },
     
     incrementScore: function(app) {
         var p = app.pointing;
         
         this.score += 7;
-        
+
         if (p.getPointingStart() == false && point >= this.score) {
             this.scoreLabel.text = this.score;
         }

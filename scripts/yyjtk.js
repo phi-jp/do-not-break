@@ -65,24 +65,36 @@ var yyjtk = {};
          * 
          */
         sendScore: function(id, score, callback) {
-        	var param = {
-        		id: id,
-        		score: score,
-        		callback: callback,
-        	};
-    		param.callback = this.setCallbackFunction(param.callback);
-            this.exec("sendScore?" + tm.util.QueryString.stringify(param));
+
+            if (yyjtk.isWebView()) {
+	        	var param = {
+	        		id: id,
+	        		score: score,
+	        		callback: callback,
+	        	};
+	    		param.callback = this.setCallbackFunction(param.callback);
+	            this.exec("sendScore?" + tm.util.QueryString.stringify(param));
+            }
+            else {
+            	callback && callback();
+            }
         },
         /**
          * 
          */
         getRanking: function(id, callback) {
-        	var param = {
-        		id: id,
-        		callback: callback,
-        	};
-    		param.callback = this.setCallbackFunction(param.callback);
-            this.exec("getRanking?" + tm.util.QueryString.stringify(param));
+
+            if (yyjtk.isWebView()) {
+	        	var param = {
+	        		id: id,
+	        		callback: callback,
+	        	};
+	    		param.callback = this.setCallbackFunction(param.callback);
+	            this.exec("getSelfRanking?" + tm.util.QueryString.stringify(param));
+	        }
+	        else {
+            	callback && callback(512);
+	        }
         },
         /**
          * 

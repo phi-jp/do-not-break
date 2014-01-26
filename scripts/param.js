@@ -8,6 +8,8 @@ var SCREEN_HEIGHT   = 960;
 var SCREEN_CENTER_X = SCREEN_WIDTH/2;
 var SCREEN_CENTER_Y = SCREEN_HEIGHT/2;
 
+var RANKING_ID = "donotbreak_world";
+
 var BLOCK_WIDTH  = 74;
 var BLOCK_HEIGHT = 25;
 
@@ -58,7 +60,7 @@ var UI_DATA = {
                 type: "tm.display.Label",
                 name: "scoreLabel",
                 x: 320, y: 250,
-                text: "2222225",
+                text: " ",
                 align: "center",
                 fontSize: 64,
                 fillStyle: "black",
@@ -68,7 +70,7 @@ var UI_DATA = {
                 type: "tm.display.Label",
                 name: "rankLabel",
                 x: 320, y: 380,
-                text: "222位",
+                text: "位",
                 align: "center",
                 fontSize: 40,
                 fillStyle: "black",
