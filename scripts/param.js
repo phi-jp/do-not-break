@@ -74,7 +74,7 @@ var UI_DATA = {
                 type: "tm.display.Label",
                 name: "rankLabel",
                 x: 320, y: 350,
-                text: "位",
+                text: " ",
                 align: "center",
                 fontSize: 40,
                 fillStyle: "black",
@@ -192,20 +192,29 @@ var ASSETS = {
     "img_text_rank": PATH_FORMAT_IMAGES.format("text_rank.png"),
     "img_text_score": PATH_FORMAT_IMAGES.format("text_score.png"),
     "img_bonus": PATH_FORMAT_IMAGES.format("bonus.png"),
+    "img_combo": PATH_FORMAT_IMAGES.format("combo.png"),
+    "img_number_sprite": PATH_FORMAT_IMAGES.format("number_sprite.png"),
 
-    // sounds
-    "bgm_game": PATH_FORMAT_SOUNDS.format("bgm_game.mp3"),
-    "bgm_bonus": PATH_FORMAT_SOUNDS.format("bgm_bonus.mp3"),
-    "se_hit_block": PATH_FORMAT_SOUNDS.format("se_hit_block.wav"),
-    "se_gameover": PATH_FORMAT_SOUNDS.format("se_gameover.wav"),
-    "se_show": PATH_FORMAT_SOUNDS.format("se_show.wav"),
-    "se_pon": PATH_FORMAT_SOUNDS.format("se_pon.wav"),
-    "se_pi": PATH_FORMAT_SOUNDS.format("se_pi.wav"),
 
     // // TODO: 消す
     // "img_top": PATH_FORMAT_IMAGES.format("ss/block_top.png"),
     // "img_result": PATH_FORMAT_IMAGES.format("ss/block_result.png"),
 };
+
+if (isNative() == false) {
+    ASSETS.$extend({
+        // sounds
+        "bgm_game": PATH_FORMAT_SOUNDS.format("bgm_game.mp3"),
+        "bgm_bonus": PATH_FORMAT_SOUNDS.format("bgm_bonus.mp3"),
+        "se_hit_block": PATH_FORMAT_SOUNDS.format("se_hit_block.wav"),
+        "se_gameover": PATH_FORMAT_SOUNDS.format("se_gameover.wav"),
+        "se_show": PATH_FORMAT_SOUNDS.format("se_show.wav"),
+        "se_pon": PATH_FORMAT_SOUNDS.format("se_pon.wav"),
+        "se_pi": PATH_FORMAT_SOUNDS.format("se_pi.wav"),
+        "se_pipon": PATH_FORMAT_SOUNDS.format("se_pipon.wav"),
+    });
+}
+
 var QUERY = tm.util.QueryString.parse(location.search.substr(1));
 
 var barsize;

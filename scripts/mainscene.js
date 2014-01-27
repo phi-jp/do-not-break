@@ -91,11 +91,8 @@ tm.define("MainScene", {
         this.bonusSprite.tweener.set({alpha:0}).wait(200).set({alpha:1}).wait(200).setLoop(true);
 
         //コンボ数表示
-        this.Combolabel = tm.app.Label("").addChildTo(this);
-        this.Combolabel
-            .setPosition(40, 480)
-            .setFillStyle("hsla(123, 80%, 50%, 8.0)")
-            .setFontSize(40);
+
+        this.comboLabel = ComboLabel().addChildTo(this).setPosition(120, 480).hide();
 
 
         //this.Out = tm.app.Label("↑out↑").addChildTo(this);
@@ -117,6 +114,8 @@ tm.define("MainScene", {
             
         this.gameovertimer =0;
 
+        return ;
+
         // adult button
         var debugButton = tm.display.CanvasElement().addChildTo(this);
         debugButton.x = SCREEN_WIDTH;
@@ -129,7 +128,22 @@ tm.define("MainScene", {
 
         debugButton.setInteractive(true);
         debugButton.onpointingstart = function() {
-        	this.app.pushScene(ResultScene());
+            this.app.pushScene(ResultScene());
+        }.bind(this);
+
+        // adult button
+        var debugButton2 = tm.display.CanvasElement().addChildTo(this);
+        debugButton2.x = 0;
+        debugButton2.y = 0;
+        debugButton2.width = 100;
+        debugButton2.height= 100;
+        debugButton2.setInteractive(true);
+        debugButton2.originX = 0;
+        debugButton2.originY = 0;
+
+        debugButton2.setInteractive(true);
+        debugButton2.onpointingstart = function() {
+            this.app.currentScene.sleep();
         }.bind(this);
     },
 
@@ -286,7 +300,7 @@ tm.define("MainScene", {
 
             //ゲームオーバー時の処理
             case 0:
-                this.Combolabel.text = "";
+                this.comboLabel.hide();
 
                 this.mba = ballGroup.children;
                 this.mba.each(function(ball) {
@@ -322,10 +336,10 @@ tm.define("MainScene", {
            //ラベル更新
             this.score.text = "SCORE:" + point;
             if(combo > 0){
-                this.Combolabel.text = combo + " Combo!";
+                this.comboLabel.setNumber(combo).show();
             }
             else{
-                this.Combolabel.text = "";   
+                this.comboLabel.setNumber(combo).hide();
             }
         
 
@@ -435,7 +449,7 @@ var balls = tm.createClass({
                     this.flg = 1;
 
                     // se
-                    // playSound("se_pi");
+                    playSound("se_pipon");
                 }
             }
             else{
@@ -639,6 +653,75 @@ var eballs = tm.createClass({
     },
 
 });
+
+tm.define("ComboLabel", {
+    superClass: "tm.display.CanvasElement",
+
+    init: function() {
+        this.superInit();
+
+        this.comboSprite = tm.display.Sprite("img_combo").addChildTo(this).setPosition(120, 0);
+
+        this.hundredNumberSprite = tm.display.Sprite("img_number_sprite").addChildTo(this)
+            .setPosition(-64, -6)
+            .setSize(48, 56)
+            .setFrameIndex(1);
+
+        this.tenNumberSprite = tm.display.Sprite("img_number_sprite").addChildTo(this)
+            .setPosition(-20, -6)
+            .setSize(48, 56)
+            .setFrameIndex(1);
+
+        this.oneNumberSprite = tm.display.Sprite("img_number_sprite").addChildTo(this)
+            .setPosition(22, -6)
+            .setSize(48, 56)
+            .setFrameIndex(1);
+
+        this.setNumber(1);
+
+        // this.num = 1;
+    },
+
+    update: function(app) {
+        // this.num+=7;
+        // this.setNumber(this.num);
+    },
+
+    setNumber: function(num) {
+        num = Math.min(num, 999);
+        var hundred = (num/100)|0;
+        var ten = ((num%100)/10)|0;
+        var one = (num%10);
+
+        if (hundred == 0) {
+            this.hundredNumberSprite.hide();
+        }
+        else {
+            this.hundredNumberSprite.setFrameIndex(hundred-1).show();
+        }
+
+        if (hundred == 0 && ten == 0) {
+            this.tenNumberSprite.hide();
+        }
+        else {
+            if (ten == 0) {
+                this.tenNumberSprite.setFrameIndex(9).show();
+            }
+            else {
+                this.tenNumberSprite.setFrameIndex(ten-1).show();
+            }
+        }
+
+        if (one == 0) {
+            this.oneNumberSprite.setFrameIndex(9);
+        }
+        else {
+            this.oneNumberSprite.setFrameIndex(one-1);
+        }
+
+        return this;
+    }
+})
 
 
 

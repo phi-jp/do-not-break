@@ -142,10 +142,10 @@ tm.define("ResultScene", {
         if (app.frame % 4 == 0) { playSound("se_pi"); }
         
         if (p.getPointingStart() == false && rank >= this.rank) {
-            this.rankLabel.text = this.rank + "位";
+            this.rankLabel.text = this.rank + "";
         }
         else {
-            this.rankLabel.text = rank + "位";
+            this.rankLabel.text = rank + "";
             this.update = null;
             
             // メッセージをフェードイン
