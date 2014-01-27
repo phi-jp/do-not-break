@@ -203,8 +203,8 @@ tm.define("MainScene", {
                     // ボーナススプライトを表示
                     this.bonusSprite.show().wakeUp();
                     // bgm を変更する
-                    playMusic("bgm_bonus");
                     stopMusic("bgm_game");
+                    playMusic("bgm_bonus");
                 }
 
                 ++this.timer;
@@ -266,8 +266,8 @@ tm.define("MainScene", {
                 this.etimer++;
 
                 if(this.etimer > 500){
-                    playMusic("bgm_game");
                     stopMusic("bgm_bonus");
+                    playMusic("bgm_game");
 
                 	this.bonusSprite.hide();
                     

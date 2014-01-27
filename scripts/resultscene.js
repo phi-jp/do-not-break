@@ -33,7 +33,7 @@ tm.define("ResultScene", {
         var hashtags = (LANGUAGE == "ja") ?
             "ブロック崩さぬ" : "breakguard";
         var message = "SCORE: {0}, {1} ".format(point, comment);
-        var url = "http://cachacacha.com";
+        var url = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=807484470&mt=8";
 
         this.messageLabel.text = comment;
 
