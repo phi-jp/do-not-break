@@ -141,19 +141,19 @@ var UI_DATA = {
                     {
                         type: "tm.display.Label",
                         x: 365, y: 720,
-                        text: "つくったひと:",
+                        text: "IDEA:",
                         align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
                     },
                     {
                         type: "tm.display.Label",
                         x: 365, y: 770,
-                        text: "音楽:",
+                        text: "SOUND:",
                         align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
                     },
                     {
                         type: "tm.display.Label",
                         x: 365, y: 820,
-                        text: "アプリ:",
+                        text: "DEVELOP:",
                         align: "right", fontSize: 24, fontWeight: "bold", fillStyle: "black",
                     },
                     {

@@ -273,7 +273,7 @@ tm.define("MainScene", {
                     
                     this.etimer = 1;
                     this.mode.text = "";
-                    barsize = 45;
+                    barsize = 55;
                     gameflg = 9;
                     this.nextmode = 1;
                 }
