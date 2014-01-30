@@ -397,6 +397,9 @@ var balls = tm.createClass({
     init: function(LR,vx,vy,ballflg) {
         this.superInit();
 
+        // 生成された際のゲームフラグ
+        this.type = gameflg;
+
         this.color = "hsla(10, 75%, 100%, 1)";
 
         this.flg=0;
@@ -449,7 +452,15 @@ var balls = tm.createClass({
                     this.flg = 1;
 
                     // se
-                    playSound("se_pipon");
+                    if (this.type != 2) {
+                        playSound("se_pipon");
+                    }
+                    else if (gagagagaga == false) {
+                        gagagagaga = true;
+                        playSound("se_gagagagaga", function() {
+                            gagagagaga = false;
+                        });
+                    }
                 }
             }
             else{
@@ -616,6 +627,14 @@ var eballs = tm.createClass({
                     combo++;
                     this.flg = 1;
                 }
+
+                if (gagagagaga == false) {
+                    gagagagaga = true;
+                    playSound("se_gagagagaga", function() {
+                        gagagagaga = false;
+                    });
+                }
+
             }
             else{
                 this.v.y *= -0.6;
