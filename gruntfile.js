@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 
   var pkg = grunt.file.readJSON('package.json');
-  
+
   var banner = '\
 /*\n\
  * do not break <%= version %>\n\
@@ -12,11 +12,34 @@ module.exports = function(grunt) {
 ';
 
   var target = [
+  	"plugins/tmlib.js",
+  	"scripts/piyo.js",
+  	"scripts/param.js",
+  	"scripts/resultscene.js",
+  	"scripts/mainscene.js",
+  	"scripts/main.js",
   ];
 
   grunt.initConfig({
     version: pkg.version,
     buildDir: "build",
+
+    jade: {
+    	compile: {
+    		options: {
+    			pretty: true,
+    			data: {
+	    			debug: true,
+	    			pageTitle: "ブロック崩さぬ",
+	    			assets: grunt.file.read('build/assets.json'),
+	    			script: grunt.file.read('build/main.js'),
+    			}
+    		},
+    		files: {
+    			"build/index.html": "templates/index.jade",
+    		}
+    	}
+    },
 
     copy: {
       main: {
@@ -32,7 +55,7 @@ module.exports = function(grunt) {
     concat: {
       tmlib: {
         src: target,
-        dest: '<%= buildDir %>/tmlib.js',
+        dest: '<%= buildDir %>/main.js',
         options: {
           banner: banner
         }
@@ -44,7 +67,7 @@ module.exports = function(grunt) {
 
         },
         files: {
-          '<%= buildDir %>/tmlib.min.js': [ '<%= buildDir %>/tmlib.js' ]
+          '<%= buildDir %>/main.min.js': [ '<%= buildDir %>/main.js' ]
         },
       },
     },
@@ -76,8 +99,9 @@ module.exports = function(grunt) {
       grunt.loadNpmTasks(key);
     }
   }
+  grunt.task.loadTasks("tasks");
 
-  grunt.registerTask('default', ['copy']);
+  grunt.registerTask('default', ['base64', 'concat', 'uglify', 'jade']);
 }
 
 

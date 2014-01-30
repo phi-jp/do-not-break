@@ -181,28 +181,21 @@ var UI_DATA = {
     }
 };
 
-var ASSETS = {
-    "img_btn_continue": PATH_FORMAT_IMAGES.format("btn_continue.png"),
-    "img_btn_ranking": PATH_FORMAT_IMAGES.format("btn_ranking.png"),
-    "img_btn_start": PATH_FORMAT_IMAGES.format("btn_start.png"),
-    "img_btn_title": PATH_FORMAT_IMAGES.format("btn_title.png"),
-    "img_btn_tweet": PATH_FORMAT_IMAGES.format("btn_tweet.png"),
-    "img_btn_line": PATH_FORMAT_IMAGES.format("btn_line.png"),
-    "img_btn_facebook": PATH_FORMAT_IMAGES.format("btn_facebook.png"),
-    "img_text_rank": PATH_FORMAT_IMAGES.format("text_rank.png"),
-    "img_text_score": PATH_FORMAT_IMAGES.format("text_score.png"),
-    "img_bonus": PATH_FORMAT_IMAGES.format("bonus.png"),
-    "img_combo": PATH_FORMAT_IMAGES.format("combo.png"),
-    "img_number_sprite": PATH_FORMAT_IMAGES.format("number_sprite.png"),
-
-
-    // // TODO: 消す
-    // "img_top": PATH_FORMAT_IMAGES.format("ss/block_top.png"),
-    // "img_result": PATH_FORMAT_IMAGES.format("ss/block_result.png"),
-};
-
 if (isNative() == false) {
-    ASSETS.$extend({
+    var ASSETS = {
+        "img_btn_continue": PATH_FORMAT_IMAGES.format("btn_continue.png"),
+        "img_btn_ranking": PATH_FORMAT_IMAGES.format("btn_ranking.png"),
+        "img_btn_start": PATH_FORMAT_IMAGES.format("btn_start.png"),
+        "img_btn_title": PATH_FORMAT_IMAGES.format("btn_title.png"),
+        "img_btn_tweet": PATH_FORMAT_IMAGES.format("btn_tweet.png"),
+        "img_btn_line": PATH_FORMAT_IMAGES.format("btn_line.png"),
+        "img_btn_facebook": PATH_FORMAT_IMAGES.format("btn_facebook.png"),
+        "img_text_rank": PATH_FORMAT_IMAGES.format("text_rank.png"),
+        "img_text_score": PATH_FORMAT_IMAGES.format("text_score.png"),
+        "img_bonus": PATH_FORMAT_IMAGES.format("bonus.png"),
+        "img_combo": PATH_FORMAT_IMAGES.format("combo.png"),
+        "img_number_sprite": PATH_FORMAT_IMAGES.format("number_sprite.png"),
+        
         // sounds
         "bgm_game": PATH_FORMAT_SOUNDS.format("bgm_game.mp3"),
         "bgm_bonus": PATH_FORMAT_SOUNDS.format("bgm_bonus.mp3"),
@@ -213,7 +206,7 @@ if (isNative() == false) {
         "se_pi": PATH_FORMAT_SOUNDS.format("se_pi.wav"),
         "se_pipon": PATH_FORMAT_SOUNDS.format("se_pipon.wav"),
         "se_gagagagaga": PATH_FORMAT_SOUNDS.format("se_gagagagaga.wav"),
-    });
+    };
 }
 
 var QUERY = tm.util.QueryString.parse(location.search.substr(1));
