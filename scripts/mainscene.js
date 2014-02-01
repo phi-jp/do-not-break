@@ -425,8 +425,13 @@ var balls = tm.createClass({
 
         this.vy = vy;
 
-
-
+        // se
+        if (this.type == 2 && gagagagaga == false) {
+            gagagagaga = true;
+            playSound("se_gagagagaga", function() {
+                gagagagaga = false;
+            });
+        }
 
         //速度処理。幾何学っぽい動きをするらしい
         //this.v = tm.geom.Vector2(0, 0);
@@ -627,14 +632,6 @@ var eballs = tm.createClass({
                     combo++;
                     this.flg = 1;
                 }
-
-                if (gagagagaga == false) {
-                    gagagagaga = true;
-                    playSound("se_gagagagaga", function() {
-                        gagagagaga = false;
-                    });
-                }
-
             }
             else{
                 this.v.y *= -0.6;

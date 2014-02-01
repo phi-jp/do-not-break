@@ -120,13 +120,6 @@ tm.define("ResultScene", {
         
         this.score += 7;
 
-        if (gagagagaga == false) {
-            gagagagaga = true;
-            playSound("se_pi", function() {
-                gagagagaga = false;
-            });
-        }
-
         if (app.frame % 4 == 0) { playSound("se_pi"); }
 
         if (p.getPointingStart() == false && point >= this.score) {
@@ -147,12 +140,7 @@ tm.define("ResultScene", {
         
         this.rank += 1;
 
-        if (gagagagaga == false) {
-            gagagagaga = true;
-            playSound("se_pi", function() {
-                gagagagaga = false;
-            });
-        }
+        if (app.frame % 4 == 0) { playSound("se_pi"); }
 
         if (p.getPointingStart() == false && rank >= this.rank) {
             this.rankLabel.text = this.rank + "";
