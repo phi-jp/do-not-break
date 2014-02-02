@@ -159,20 +159,38 @@ var UI_DATA = {
                     {
                         type: "tm.display.Label",
                         x: 385, y: 720,
-                        text: "うちょ(ucho)",
-                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                        text: "うちょ(utyo)",
+                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "rgb(24,215,9)",
+                    },
+                    {
+                        type: "tm.display.RectangleShape",
+                        init: [165, 2, {
+                            fillStyle: "rgb(24,215,9)",
+                            strokeStyle: "transparent",
+                        }],
+                        x: 385, y: 725,
+                        originX: 0
                     },
                     {
                         type: "tm.display.Label",
                         x: 385, y: 770,
                         text: "魔王魂",
-                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "rgb(24,215,9)",
+                    },
+                    {
+                        type: "tm.display.RectangleShape",
+                        init: [75, 2, {
+                            fillStyle: "rgb(24,215,9)",
+                            strokeStyle: "transparent",
+                        }],
+                        x: 385, y: 775,
+                        originX: 0
                     },
                     {
                         type: "tm.display.Label",
                         x: 385, y: 820,
                         text: "flowork",
-                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "black",
+                        align: "left", fontSize: 24, fontWeight: "bold", fillStyle: "rgb(24,215,9)",
                     },
 
                 ],
