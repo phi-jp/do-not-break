@@ -1,4 +1,14 @@
 
+
+var isNative = (function() {
+    var flag = /piyokawa/i.test(navigator.userAgent);
+    return function() {
+        return flag;
+    };
+})();
+
+
+
 var yyjtk = {};
 
 ;(function() {

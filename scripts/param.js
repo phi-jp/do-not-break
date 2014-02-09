@@ -22,6 +22,7 @@ var UI_DATA = {
         children: [{
             type: "Label",
             name: "score",
+            align: "left",
             fontSize: 32,
             fillStyle: "White",
             shadowColor: "blue",
@@ -226,6 +227,19 @@ if (isNative() == false) {
         "se_gagagagaga": PATH_FORMAT_SOUNDS.format("se_gagagagaga.wav"),
     };
 }
+else {
+    ASSETS.$extend({
+        "bgm_game": PATH_FORMAT_SOUNDS.format("bgm_game.mp3"),
+        "bgm_bonus": PATH_FORMAT_SOUNDS.format("bgm_bonus.mp3"),
+        "se_hit_block": PATH_FORMAT_SOUNDS.format("se_hit_block.wav"),
+        "se_gameover": PATH_FORMAT_SOUNDS.format("se_gameover.wav"),
+        "se_show": PATH_FORMAT_SOUNDS.format("se_show.wav"),
+        "se_pon": PATH_FORMAT_SOUNDS.format("se_pon.wav"),
+        "se_pi": PATH_FORMAT_SOUNDS.format("se_pi.wav"),
+        "se_pipon": PATH_FORMAT_SOUNDS.format("se_pipon.wav"),
+        "se_gagagagaga": PATH_FORMAT_SOUNDS.format("se_gagagagaga.wav"),
+    });
+}
 
 var QUERY = tm.util.QueryString.parse(location.search.substr(1));
 
@@ -259,54 +273,5 @@ var RESULT_PARAM = {
 
 
 var speed;
-
-
-
-
-var playSound = function(name, param) {
-    param = param || {};
-
-    if (isNative()) {
-        yyjtk.api.playSound(name, param && param.callback);
-    }
-    else {
-        var sound = tm.asset.Manager.get(name);
-        if (sound) {
-            sound.clone().play();
-            var duration = sound.source.buffer.duration*1000 | 0;
-            setTimeout(function() {
-                if (typeof param === "function") param();
-                else if (typeof param.callback === "function") param.callback();
-            }, duration);
-        }
-    }
-};
-var stopSound = function(name) {
-    if (isNative()) {
-        yyjtk.api.stopSound(name);
-    }
-    else {
-        tm.asset.Manager.get(name).stop();
-    }
-};
-
-var playMusic = function(name) {
-    if (isNative()) {
-        yyjtk.api.playMusic(name);
-    }
-    else {
-        tm.asset.Manager.get(name).setLoop(true).play();
-    }
-};
-
-var stopMusic = function(name) {
-    if (isNative()) {
-        yyjtk.api.stopMusic(name);
-    }
-    else {
-        tm.asset.Manager.get(name).stop();
-    }
-};
-
 
 

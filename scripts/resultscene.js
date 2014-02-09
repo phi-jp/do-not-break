@@ -11,9 +11,9 @@ tm.define("ResultScene", {
     init: function(param) {
         this.superInit();
 
-        stopMusic("bgm_game");
+        tm.asset.Manager.get("bgm_game").setLoop(true).stop();
 
-        playSound("se_show");
+        tm.asset.Manager.get("se_show").clone().play();
         
         this.fromJSON(UI_DATA.result);
         
@@ -48,7 +48,7 @@ tm.define("ResultScene", {
                     hashtags: hashtags,
                     url: url
                 });
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             });
         // facebook
         this.ui.btnFacebook
@@ -59,7 +59,7 @@ tm.define("ResultScene", {
                     text: message,
                     url: url
                 });
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             });
         // line
         this.ui.btnLine
@@ -70,7 +70,7 @@ tm.define("ResultScene", {
                     text: message,
                     url: url
                 });
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             });
 
         this.ui.btnTitle
@@ -79,7 +79,7 @@ tm.define("ResultScene", {
             .on("pointingstart", function() {
                 var app = this.app;
                 yyjtk.api.closeView();
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             }.bind(this));
         // コンティニュー
         this.ui.btnContinue
@@ -90,7 +90,7 @@ tm.define("ResultScene", {
 
                 app.popScene();
                 app.replaceScene(MainScene());
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             }.bind(this));
         // ランキング
         this.ui.btnRanking
@@ -98,7 +98,7 @@ tm.define("ResultScene", {
             .setBoundingType("rect")
             .on("pointingstart", function() {
                 yyjtk.api.viewRanking(RANKING_ID);
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             }.bind(this));
 
         // ランキング送信
@@ -120,7 +120,9 @@ tm.define("ResultScene", {
         
         this.score += 7;
 
-        if (app.frame % 4 == 0) { playSound("se_pi"); }
+        if (app.frame % 4 == 0) { 
+            tm.asset.Manager.get("se_pi").clone().play();
+        }
 
         if (p.getPointingStart() == false && point >= this.score) {
             this.scoreLabel.text = this.score;
@@ -131,7 +133,7 @@ tm.define("ResultScene", {
             this.rankLabel.show();
             this.rankImage.show();
             this.update = this.incrementRank;
-            playSound("se_show");
+            tm.asset.Manager.get("se_show").clone().play();
         }
     },
     
@@ -140,7 +142,9 @@ tm.define("ResultScene", {
         
         this.rank += 1;
 
-        if (app.frame % 4 == 0) { playSound("se_pi"); }
+        if (app.frame % 4 == 0) {
+            tm.asset.Manager.get("se_pi").clone().play();
+        }
 
         if (p.getPointingStart() == false && rank >= this.rank) {
             this.rankLabel.text = this.rank + "";
@@ -151,7 +155,7 @@ tm.define("ResultScene", {
             
             // メッセージをフェードイン
             this.fadeMessage();
-            playSound("se_show");
+            tm.asset.Manager.get("se_show").clone().play();
         }
     },
     

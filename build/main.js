@@ -8703,7 +8703,7 @@ tm.input = tm.input || {};
                 }
                 if (e.rotationRate) {
                     rotation.x = rotation.beta  = e.rotationRate.beta;
-                    rotation.y = rotatoin.gamma = e.rotationRate.gamma;
+                    rotation.y = rotation.gamma = e.rotationRate.gamma;
                     rotation.z = rotation.alpha = e.rotationRate.alpha;
                 }
             });
@@ -11964,20 +11964,33 @@ tm.app = tm.app || {};
          * jsonをパースしてthisに展開
          */
         fromJSON: function(data) {
+            var _fromJSON = function(name, data) {
+                var init = data["init"] || [];
+                var type = (DIRTY_CLASS_MAP[data.type]) ? DIRTY_CLASS_MAP[data.type] : data.type;
+                var _class = tm.using(type);
+                
+                console.assert(Object.keys(_class).length !== 0, _class + " is not defined.");
+                
+                var elm = _class.apply(null, init).addChildTo(this);
+                elm.fromJSON(data);
+                
+                this[name] = elm;
+            }.bind(this);
+            
             for (var key in data) {
                 var value = data[key];
                 if (key == "children") {
-                    for (var i=0,len=value.length; i<len; ++i) {
-                        var data = value[i];
-                        var init = data["init"] || [];
-                        var type = (DIRTY_CLASS_MAP[data.type]) ? DIRTY_CLASS_MAP[data.type] : data.type;
-                        var _class = tm.using(type);
-                        
-                        console.assert(Object.keys(_class).length !== 0, _class + " is not defined.");
-                        
-                        var elm = _class.apply(null, init).addChildTo(this);
-                        elm.fromJSON(data);
-                        this[data.name] = elm;
+                    if (value instanceof Array) {
+                        for (var i=0,len=value.length; i<len; ++i) {
+                            var data = value[i];
+                            _fromJSON(data.name, data);
+                        }
+                    }
+                    else {
+                        for (var key in value) {
+                            var data = value[key];
+                            _fromJSON(key, data);
+                        }
                     }
                 }
                 else {
@@ -11987,6 +12000,12 @@ tm.app = tm.app || {};
 
             return this;
         },
+        /**
+         * @TODO ?
+         */
+        toJSON: function() {
+            // TODO:
+        },
         
     });
 
@@ -11995,21 +12014,23 @@ tm.app = tm.app || {};
      * namespaceの後方互換
      */
     var DIRTY_CLASS_MAP = {
-        "Sprite"            : "tm.display.Sprite",
-        "Label"             : "tm.display.Label",
-        "Shape"             : "tm.display.Shape",
-        "CircleShape"       : "tm.display.CircleShape",
-        "TriangleShape"     : "tm.display.TriangleShape",
-        "RectangleShape"    : "tm.display.RectangleShape",
-        "StarShape"         : "tm.display.StarShape",
-        "PolygonShape"      : "tm.display.PolygonShape",
-        "HeartShape"        : "tm.display.HeartShape",
-        "AnimationSprite"   : "tm.display.AnimationSprite",
+        "Sprite"                : "tm.display.Sprite",
+        "Label"                 : "tm.display.Label",
+        "Shape"                 : "tm.display.Shape",
+        "CircleShape"           : "tm.display.CircleShape",
+        "TriangleShape"         : "tm.display.TriangleShape",
+        "RectangleShape"        : "tm.display.RectangleShape",
+        "RoundRectangleShape"   : "tm.display.RoundRectangleShape",
+        "TextShape"             : "tm.display.TextShape",
+        "StarShape"             : "tm.display.StarShape",
+        "PolygonShape"          : "tm.display.PolygonShape",
+        "HeartShape"            : "tm.display.HeartShape",
+        "AnimationSprite"       : "tm.display.AnimationSprite",
         
-        "LabelButton"       : "tm.ui.LabelButton",
-        "IconButton"        : "tm.ui.IconButton",
-        "GlossyButton"      : "tm.ui.GlossyButton",
-        "FlatButton"        : "tm.ui.FlatButton",
+        "LabelButton"           : "tm.ui.LabelButton",
+        "IconButton"            : "tm.ui.IconButton",
+        "GlossyButton"          : "tm.ui.GlossyButton",
+        "FlatButton"            : "tm.ui.FlatButton",
     };
     
 })();
@@ -14122,40 +14143,6 @@ tm.display = tm.display || {};
 
         /**
          * @TODO ?
-         */
-        fromJSON: function(data) {
-            for (var key in data) {
-                var value = data[key];
-                if (key == "children") {
-                    for (var i=0,len=value.length; i<len; ++i) {
-                        var data = value[i];
-                        var init = data["init"] || [];
-                        var _class = tm.using(data.type);
-                        if (Object.keys(_class).length === 0) {
-                            _class = tm.display[data.type];
-                        }
-                        var elm = _class.apply(null, init).addChildTo(this);
-                        elm.fromJSON(data);
-                        this[data.name] = elm;
-                    }
-                }
-                else {
-                    this[key] = value;
-                }
-            }
-
-            return this;
-        },
-
-        /**
-         * @TODO ?
-         */
-        toJSON: function() {
-            // TODO:
-        },
-
-        /**
-         * @TODO ?
          * @private
          */
         _calcAlpha: function() {
@@ -14868,8 +14855,8 @@ tm.display = tm.display || {};
             this._lineHeight = 1.2;
             this._updateFont();
             
-            this.align      = "start";
-            this.baseline   = "alphabetic";
+            this.align = tm.display.Label.default.align;
+            this.baseline = tm.display.Label.default.baseline;
 
             this.maxWidth   = null;
         },
@@ -14992,6 +14979,13 @@ tm.display = tm.display || {};
             this._lineHeight = v; this._updateFont();
         },
     });
+    
+    tm.display.Label.default = {
+        align: "center",
+        baseline: "middle",
+        // align: "start",
+        // baseline: "alphabetic",
+    };
 
     
 })();
@@ -16497,6 +16491,160 @@ tm.ui = tm.ui || {};
 
 
 
+
+;(function() {
+    
+    tm.define("tm.ui.LabelArea", {
+        superClass: "tm.display.Shape",
+        
+        init: function(param) {
+            param = param || {};
+            this.superInit(param.width || 150, param.height || 60);
+            
+            this.canvas.clearColor("red");
+            
+            this.mode = param.mode || "horizon";
+            
+            this._fillStyle = param.fillStyle || "#aaa";
+            this._bgColor = param.bgColor || "transparent";
+            
+            this._fontSize   = param.fontSize || 24;
+            this._fontFamily = "'Consolas', 'Monaco', 'ＭＳ ゴシック'";
+            this._fontWeight = "";
+            this._updateFont();
+            
+            this.setText(param.text || "こんにちは,世界!");
+        },
+        
+        setText: function(text) {
+            if (this._text === text) { return ; }
+            
+            this._text =  text;
+            
+            this._renderText();
+        },
+        
+        _renderText: function() {
+            this.canvas.width  =this.width;
+            this.canvas.height =this.height;
+            
+            this.canvas.clearColor(this.bgColor);
+            
+            this.canvas.font = this.fontStyle;
+            this.canvas.fillStyle = this.fillStyle;
+            this.canvas.fillLabelArea({
+                text: this._text,
+                x: 0,
+                y: 0,
+                width: this.width,
+                height: this.height,
+                mode: this.mode,
+            });
+        },
+
+        /**
+         * @TODO ?
+         * @private
+         */
+        _updateFont: function() {
+            this.fontStyle = "{fontWeight} {fontSize}px {fontFamily}".format(this);
+            if (this.text) {
+                this._renderText();
+            }
+        },
+    });
+    
+    
+    /**
+     * @property    text
+     * 文字
+     */
+    tm.ui.LabelArea.prototype.accessor("text", {
+        "get": function() { return this._text; },
+        "set": function(v){
+            this.setText(v);
+        }
+    });
+    
+    /**
+     * @property    fontSize
+     * フォントサイズ
+     */
+    tm.ui.LabelArea.prototype.accessor("fontSize", {
+        "get": function() { return this._fontSize; },
+        "set": function(v){ this._fontSize = v; this._updateFont(); }
+    });
+    
+    /**
+     * @property    fontFamily
+     * フォント
+     */
+    tm.ui.LabelArea.prototype.accessor("fontFamily", {
+        "get": function() { return this._fontFamily; },
+        "set": function(v){ this._fontFamily = v; this._updateFont(); }
+    });
+    
+    /**
+     * @property    fontWeight
+     */
+    tm.ui.LabelArea.prototype.accessor("fontWeight", {
+        "get": function() { return this._fontWeight; },
+        "set": function(v) {
+            this._fontWeight = v; this._updateFont();
+        },
+    });
+    
+    /**
+     * @property    fillStyle
+     */
+    tm.ui.LabelArea.prototype.accessor("fillStyle", {
+        "get": function() { return this._fillStyle; },
+        "set": function(v) {
+            this._fillStyle = v; this._updateFont();
+        },
+    });
+    
+    /**
+     * @property    bgColor
+     */
+    tm.ui.LabelArea.prototype.accessor("bgColor", {
+        "get": function() { return this._bgColor; },
+        "set": function(v) {
+            this._bgColor = v; this._updateFont();
+        },
+    });
+
+    /**
+     * @property    width
+     * dummy
+     */
+    tm.ui.LabelArea.prototype.accessor("width", {
+        "get": function() { return this._width; },
+        "set": function(v){
+            this._width = v;
+            if (this.text) {
+                this._renderText();
+            }
+        }
+    });
+    
+    /**
+     * @property    height
+     * dummy
+     */
+    tm.ui.LabelArea.prototype.accessor("height", {
+        "get": function() { return this._height; },
+        "set": function(v){
+            this._height = v;
+            if (this.text) {
+                this._renderText();
+            }
+        }
+    });
+
+    
+})();
+
 /*
  * loadingscene.js
  */
@@ -16518,9 +16666,9 @@ tm.ui = tm.ui || {};
             param = {}.$extend(DEFAULT_PARAM, param);
             
             this.bg = tm.display.Shape(param.width, param.height).addChildTo(this);
-            this.bg.canvas.clearColor("hsla(200, 80%, 70%, 0.0)");
+            this.bg.canvas.clearColor("transparent");
             this.bg.setOrigin(0, 0);
-
+            
             var label = tm.display.Label("Loading");
             label.x = param.width/2;
             label.y = param.height/2;
@@ -17365,12 +17513,17 @@ tm.sound = tm.sound || {};
          */
         play: function(time) {
             if (time === undefined) time = 0;
-            this.source.noteOn(this.context.currentTime + time);
-            /*
-            this.source.noteGrainOn(this.context.currentTime + time, 0, this.buffer.duration);
-            console.dir(this.buffer.duration);
-            console.dir(this.context.currentTime)
-            */
+
+            if (this.source.playbackState == 0) {
+                this.source.noteOn(this.context.currentTime + time);
+            }
+            
+            var self = this;
+            var time = (this.source.buffer.duration/this.source.playbackRate.value)*1000;
+            window.setTimeout(function() {
+                var e = tm.event.Event("ended");
+                self.fire(e);
+            }, time);
 
             return this;
         },
@@ -17380,6 +17533,9 @@ tm.sound = tm.sound || {};
          */
         stop: function(time) {
             if (time === undefined) time = 0;
+            if (this.source.playbackState == 0) {
+                return ;
+            }
             this.source.noteOff(this.context.currentTime + time);
             
             var buffer = this.buffer;
@@ -17897,6 +18053,7 @@ tm.google = tm.google || {};
             "CircleShape",
             "TriangleShape",
             "RectangleShape",
+            "RoundRectangleShape",
             "StarShape",
             "PolygonShape",
             "HeartShape",
@@ -17929,6 +18086,17 @@ tm.google = tm.google || {};
     tm.asset.AssetManager = tm.asset.Manager;
 
 })();
+
+
+
+var isNative = (function() {
+    var flag = /piyokawa/i.test(navigator.userAgent);
+    return function() {
+        return true;
+        return flag;
+    };
+})();
+
 
 
 var yyjtk = {};
@@ -18110,6 +18278,116 @@ var yyjtk = {};
 })();
 
 /*
+ * NativeAudio
+ */
+
+
+
+
+;(function() {
+    
+    if (!isNative()) { return ; }
+
+    var loadFunc = function(path) {
+        return NativeAudio(path);
+    };
+    
+    tm.asset.Loader.register("wav", loadFunc);
+    tm.asset.Loader.register("mp3", loadFunc);
+    tm.asset.Loader.register("m4a", loadFunc);
+    tm.asset.Loader.register("ogg", loadFunc);
+    
+    tm.define("NativeAudio", {
+        
+        superClass: "tm.event.EventDispatcher",
+        
+        src: "",
+        loaded: false,
+        loopFlag: false,
+        volume: 0.8,
+        
+        init: function(src) {
+            
+            this.superInit();
+            
+            this.loaded = true;
+            this._load(src);
+        },
+        
+        _load: function(src) {
+            
+            var ma = src.match(/(.*)$/);
+
+            this.src = src;
+            this.path = ma[1].replace("sounds/", '');
+            this.volume = 0.8;
+            this.loaded = true;
+
+            this.fire(tm.event.Event("load"));
+
+            return this;
+        },
+        
+        play: function() {
+            
+            var self = this;
+            
+            if (this.loopFlag == false) {
+                yyjtk.api.playSound(this.path, {
+                    volume: this.volume,
+                    callback: function() {
+                        var e = tm.event.Event("ended");
+                        self.fire(e);
+                    },
+                });
+            }
+            else {
+                yyjtk.api.playMusic(this.path, {
+                    volume: this.volume,
+                    callback: function() {
+                        var e = tm.event.Event("ended");
+                        self.fire(e);
+                    },
+                });
+            }
+            
+            return this;
+        },
+        
+        stop: function() {
+            if (this.loopFlag == false) {
+                yyjtk.api.stopSound();
+            }
+            else {
+                yyjtk.api.stopMusic();
+            }
+            
+            return this;
+        },
+        
+        setLoop: function(flag) {
+            this.loopFlag = flag;
+            
+            return this;
+        },
+        
+        setVolume: function(volume) {
+            
+            this.volume = volume;
+            
+            return this;
+        },
+        
+        clone: function() {
+            
+            var audio = NativeAudio(this.src);
+            
+            return audio;
+        },
+    });
+    
+})();
+/*
  * param
  */
 
@@ -18133,6 +18411,7 @@ var UI_DATA = {
         children: [{
             type: "Label",
             name: "score",
+            align: "left",
             fontSize: 32,
             fillStyle: "White",
             shadowColor: "blue",
@@ -18337,6 +18616,19 @@ if (isNative() == false) {
         "se_gagagagaga": PATH_FORMAT_SOUNDS.format("se_gagagagaga.wav"),
     };
 }
+else {
+    ASSETS.$extend({
+        "bgm_game": PATH_FORMAT_SOUNDS.format("bgm_game.mp3"),
+        "bgm_bonus": PATH_FORMAT_SOUNDS.format("bgm_bonus.mp3"),
+        "se_hit_block": PATH_FORMAT_SOUNDS.format("se_hit_block.wav"),
+        "se_gameover": PATH_FORMAT_SOUNDS.format("se_gameover.wav"),
+        "se_show": PATH_FORMAT_SOUNDS.format("se_show.wav"),
+        "se_pon": PATH_FORMAT_SOUNDS.format("se_pon.wav"),
+        "se_pi": PATH_FORMAT_SOUNDS.format("se_pi.wav"),
+        "se_pipon": PATH_FORMAT_SOUNDS.format("se_pipon.wav"),
+        "se_gagagagaga": PATH_FORMAT_SOUNDS.format("se_gagagagaga.wav"),
+    });
+}
 
 var QUERY = tm.util.QueryString.parse(location.search.substr(1));
 
@@ -18370,55 +18662,6 @@ var RESULT_PARAM = {
 
 
 var speed;
-
-
-
-
-var playSound = function(name, param) {
-    param = param || {};
-
-    if (isNative()) {
-        yyjtk.api.playSound(name, param && param.callback);
-    }
-    else {
-        var sound = tm.asset.Manager.get(name);
-        if (sound) {
-            sound.clone().play();
-            var duration = sound.source.buffer.duration*1000 | 0;
-            setTimeout(function() {
-                if (typeof param === "function") param();
-                else if (typeof param.callback === "function") param.callback();
-            }, duration);
-        }
-    }
-};
-var stopSound = function(name) {
-    if (isNative()) {
-        yyjtk.api.stopSound(name);
-    }
-    else {
-        tm.asset.Manager.get(name).stop();
-    }
-};
-
-var playMusic = function(name) {
-    if (isNative()) {
-        yyjtk.api.playMusic(name);
-    }
-    else {
-        tm.asset.Manager.get(name).setLoop(true).play();
-    }
-};
-
-var stopMusic = function(name) {
-    if (isNative()) {
-        yyjtk.api.stopMusic(name);
-    }
-    else {
-        tm.asset.Manager.get(name).stop();
-    }
-};
-
 
 
 
@@ -18600,6 +18843,45 @@ tm.define("ResultScene", {
 });
 
 /*
+ * pausescene.js
+ */
+
+
+tm.define("PauseScene", {
+	superClass: "tm.app.Scene",
+
+	init: function() {
+		this.superInit();
+
+		this.fromJSON({
+			children: {
+				"bg": {
+					type: "tm.display.RectangleShape",
+					init: [SCREEN_WIDTH, SCREEN_HEIGHT, {
+						// strokeStyle: "transparent",
+						fillStyle: "rgba(0, 0, 0, 0.8)"
+					}],
+					originX: 0,
+					originY: 0,
+				},
+				"label": {
+					type: "tm.display.Label",
+					text: "Pause",
+					x: SCREEN_CENTER_X,
+					y: SCREEN_CENTER_Y,
+					fillStyle: "white",
+					fontSize: 48,
+				},
+			},
+		})
+
+	},
+
+	onpointingstart: function() {
+		this.app.popScene();
+	},
+})
+/*
  * mainscene.js
  */
 
@@ -18613,7 +18895,7 @@ tm.define("MainScene", {
         this.superInit();
 
         // bgm 再生
-        playMusic("bgm_game");
+        tm.asset.Manager.get("bgm_game").setLoop(true).play();
 
         blockGroup = tm.app.CanvasElement().addChildTo(this);
         //ボールグループ作成
@@ -18715,6 +18997,14 @@ tm.define("MainScene", {
             
         this.gameovertimer =0;
 
+        this.onblur = function() {
+            this.app.pushScene(PauseScene());
+        };
+
+        // setTimeout(function() {
+        //     this.app.pushScene(PauseScene());
+        // }.bind(this), 100);
+
         return ;
 
         // adult button
@@ -18804,8 +19094,8 @@ tm.define("MainScene", {
                     // ボーナススプライトを表示
                     this.bonusSprite.show().wakeUp();
                     // bgm を変更する
-                    stopMusic("bgm_game");
-                    playMusic("bgm_bonus");
+                    tm.asset.Manager.get("bgm_game").setLoop(true).stop();
+                    tm.asset.Manager.get("bgm_bonus").setLoop(true).play();
                 }
 
                 ++this.timer;
@@ -18867,8 +19157,8 @@ tm.define("MainScene", {
                 this.etimer++;
 
                 if(this.etimer > 500){
-                    stopMusic("bgm_bonus");
-                    playMusic("bgm_game");
+                    tm.asset.Manager.get("bgm_bonus").setLoop(true).stop();
+                    tm.asset.Manager.get("bgm_game").setLoop(true).play();
 
                 	this.bonusSprite.hide();
                     
@@ -19028,10 +19318,13 @@ var balls = tm.createClass({
 
         // se
         if (this.type == 2 && gagagagaga == false) {
+            var sound = tm.asset.Manager.get("se_gagagagaga").clone();
             gagagagaga = true;
-            playSound("se_gagagagaga", function() {
+            sound.onended = function() {
+                console.log("hoge");
                 gagagagaga = false;
-            });
+            };
+            sound.play();
         }
 
         //速度処理。幾何学っぽい動きをするらしい
@@ -19059,13 +19352,16 @@ var balls = tm.createClass({
 
                     // se
                     if (this.type != 2) {
-                        playSound("se_pipon");
+                        tm.asset.Manager.get("se_pipon").clone().play();
                     }
                     else if (gagagagaga == false) {
+                        var sound = tm.asset.Manager.get("se_gagagagaga").clone();
                         gagagagaga = true;
-                        playSound("se_gagagagaga", function() {
+                        sound.onended = function() {
+                            console.log("hoge");
                             gagagagaga = false;
-                        });
+                        };
+                        sound.play();
                     }
                 }
             }
@@ -19080,7 +19376,7 @@ var balls = tm.createClass({
                 }
 
                 // 跳ね返り
-                playSound("se_pon");
+                tm.asset.Manager.get("se_pon").clone().play();
             }
         }
 
@@ -19094,7 +19390,7 @@ var balls = tm.createClass({
                 block.remove();
                 self.ballflg++;
 
-                playSound("se_hit_block");
+                tm.asset.Manager.get("se_hit_block").clone().play();
                }
              
         });
@@ -19117,7 +19413,7 @@ var balls = tm.createClass({
             this.remove();
 
             // game over se
-            playSound("se_gameover");
+            tm.asset.Manager.get("se_gameover").clone().play();
         }
 
         //ブロックに２回あたったら消える
@@ -19379,7 +19675,7 @@ tm.main(function() {
     app.resize(SCREEN_WIDTH, SCREEN_HEIGHT);
     app.fitWindow();
 
-    var flow = tm.util.Flow(2, function() {
+    var flow = tm.util.Flow(1, function() {
         var scene = tm.global[sceneName]();
         app.replaceScene(scene);
     });
@@ -19402,10 +19698,9 @@ tm.main(function() {
     app.replaceScene(loading);
 
     // 言語取得
-    yyjtk.api.getLanguage(function(lang) {
-        LANGUAGE = lang;
-        flow.pass();
-    });
+    LANGUAGE = (function() {
+        return navigator.browserLanguage || navigator.language || navigator.userLanguage;
+    })();
     
     // 実行
     app.run();

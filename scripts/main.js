@@ -8,7 +8,7 @@ tm.main(function() {
     app.resize(SCREEN_WIDTH, SCREEN_HEIGHT);
     app.fitWindow();
 
-    var flow = tm.util.Flow(2, function() {
+    var flow = tm.util.Flow(1, function() {
         var scene = tm.global[sceneName]();
         app.replaceScene(scene);
     });
@@ -31,10 +31,9 @@ tm.main(function() {
     app.replaceScene(loading);
 
     // 言語取得
-    yyjtk.api.getLanguage(function(lang) {
-        LANGUAGE = lang;
-        flow.pass();
-    });
+    LANGUAGE = (function() {
+        return navigator.browserLanguage || navigator.language || navigator.userLanguage;
+    })();
     
     // 実行
     app.run();

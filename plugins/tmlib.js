@@ -8697,7 +8697,7 @@ tm.input = tm.input || {};
                 }
                 if (e.rotationRate) {
                     rotation.x = rotation.beta  = e.rotationRate.beta;
-                    rotation.y = rotatoin.gamma = e.rotationRate.gamma;
+                    rotation.y = rotation.gamma = e.rotationRate.gamma;
                     rotation.z = rotation.alpha = e.rotationRate.alpha;
                 }
             });
@@ -11958,20 +11958,33 @@ tm.app = tm.app || {};
          * jsonをパースしてthisに展開
          */
         fromJSON: function(data) {
+            var _fromJSON = function(name, data) {
+                var init = data["init"] || [];
+                var type = (DIRTY_CLASS_MAP[data.type]) ? DIRTY_CLASS_MAP[data.type] : data.type;
+                var _class = tm.using(type);
+                
+                console.assert(Object.keys(_class).length !== 0, _class + " is not defined.");
+                
+                var elm = _class.apply(null, init).addChildTo(this);
+                elm.fromJSON(data);
+                
+                this[name] = elm;
+            }.bind(this);
+            
             for (var key in data) {
                 var value = data[key];
                 if (key == "children") {
-                    for (var i=0,len=value.length; i<len; ++i) {
-                        var data = value[i];
-                        var init = data["init"] || [];
-                        var type = (DIRTY_CLASS_MAP[data.type]) ? DIRTY_CLASS_MAP[data.type] : data.type;
-                        var _class = tm.using(type);
-                        
-                        console.assert(Object.keys(_class).length !== 0, _class + " is not defined.");
-                        
-                        var elm = _class.apply(null, init).addChildTo(this);
-                        elm.fromJSON(data);
-                        this[data.name] = elm;
+                    if (value instanceof Array) {
+                        for (var i=0,len=value.length; i<len; ++i) {
+                            var data = value[i];
+                            _fromJSON(data.name, data);
+                        }
+                    }
+                    else {
+                        for (var key in value) {
+                            var data = value[key];
+                            _fromJSON(key, data);
+                        }
                     }
                 }
                 else {
@@ -11981,6 +11994,12 @@ tm.app = tm.app || {};
 
             return this;
         },
+        /**
+         * @TODO ?
+         */
+        toJSON: function() {
+            // TODO:
+        },
         
     });
 
@@ -11989,21 +12008,23 @@ tm.app = tm.app || {};
      * namespaceの後方互換
      */
     var DIRTY_CLASS_MAP = {
-        "Sprite"            : "tm.display.Sprite",
-        "Label"             : "tm.display.Label",
-        "Shape"             : "tm.display.Shape",
-        "CircleShape"       : "tm.display.CircleShape",
-        "TriangleShape"     : "tm.display.TriangleShape",
-        "RectangleShape"    : "tm.display.RectangleShape",
-        "StarShape"         : "tm.display.StarShape",
-        "PolygonShape"      : "tm.display.PolygonShape",
-        "HeartShape"        : "tm.display.HeartShape",
-        "AnimationSprite"   : "tm.display.AnimationSprite",
+        "Sprite"                : "tm.display.Sprite",
+        "Label"                 : "tm.display.Label",
+        "Shape"                 : "tm.display.Shape",
+        "CircleShape"           : "tm.display.CircleShape",
+        "TriangleShape"         : "tm.display.TriangleShape",
+        "RectangleShape"        : "tm.display.RectangleShape",
+        "RoundRectangleShape"   : "tm.display.RoundRectangleShape",
+        "TextShape"             : "tm.display.TextShape",
+        "StarShape"             : "tm.display.StarShape",
+        "PolygonShape"          : "tm.display.PolygonShape",
+        "HeartShape"            : "tm.display.HeartShape",
+        "AnimationSprite"       : "tm.display.AnimationSprite",
         
-        "LabelButton"       : "tm.ui.LabelButton",
-        "IconButton"        : "tm.ui.IconButton",
-        "GlossyButton"      : "tm.ui.GlossyButton",
-        "FlatButton"        : "tm.ui.FlatButton",
+        "LabelButton"           : "tm.ui.LabelButton",
+        "IconButton"            : "tm.ui.IconButton",
+        "GlossyButton"          : "tm.ui.GlossyButton",
+        "FlatButton"            : "tm.ui.FlatButton",
     };
     
 })();
@@ -14116,40 +14137,6 @@ tm.display = tm.display || {};
 
         /**
          * @TODO ?
-         */
-        fromJSON: function(data) {
-            for (var key in data) {
-                var value = data[key];
-                if (key == "children") {
-                    for (var i=0,len=value.length; i<len; ++i) {
-                        var data = value[i];
-                        var init = data["init"] || [];
-                        var _class = tm.using(data.type);
-                        if (Object.keys(_class).length === 0) {
-                            _class = tm.display[data.type];
-                        }
-                        var elm = _class.apply(null, init).addChildTo(this);
-                        elm.fromJSON(data);
-                        this[data.name] = elm;
-                    }
-                }
-                else {
-                    this[key] = value;
-                }
-            }
-
-            return this;
-        },
-
-        /**
-         * @TODO ?
-         */
-        toJSON: function() {
-            // TODO:
-        },
-
-        /**
-         * @TODO ?
          * @private
          */
         _calcAlpha: function() {
@@ -14862,8 +14849,8 @@ tm.display = tm.display || {};
             this._lineHeight = 1.2;
             this._updateFont();
             
-            this.align      = "start";
-            this.baseline   = "alphabetic";
+            this.align = tm.display.Label.default.align;
+            this.baseline = tm.display.Label.default.baseline;
 
             this.maxWidth   = null;
         },
@@ -14986,6 +14973,13 @@ tm.display = tm.display || {};
             this._lineHeight = v; this._updateFont();
         },
     });
+    
+    tm.display.Label.default = {
+        align: "center",
+        baseline: "middle",
+        // align: "start",
+        // baseline: "alphabetic",
+    };
 
     
 })();
@@ -16491,6 +16485,160 @@ tm.ui = tm.ui || {};
 
 
 
+
+;(function() {
+    
+    tm.define("tm.ui.LabelArea", {
+        superClass: "tm.display.Shape",
+        
+        init: function(param) {
+            param = param || {};
+            this.superInit(param.width || 150, param.height || 60);
+            
+            this.canvas.clearColor("red");
+            
+            this.mode = param.mode || "horizon";
+            
+            this._fillStyle = param.fillStyle || "#aaa";
+            this._bgColor = param.bgColor || "transparent";
+            
+            this._fontSize   = param.fontSize || 24;
+            this._fontFamily = "'Consolas', 'Monaco', 'ＭＳ ゴシック'";
+            this._fontWeight = "";
+            this._updateFont();
+            
+            this.setText(param.text || "こんにちは,世界!");
+        },
+        
+        setText: function(text) {
+            if (this._text === text) { return ; }
+            
+            this._text =  text;
+            
+            this._renderText();
+        },
+        
+        _renderText: function() {
+            this.canvas.width  =this.width;
+            this.canvas.height =this.height;
+            
+            this.canvas.clearColor(this.bgColor);
+            
+            this.canvas.font = this.fontStyle;
+            this.canvas.fillStyle = this.fillStyle;
+            this.canvas.fillLabelArea({
+                text: this._text,
+                x: 0,
+                y: 0,
+                width: this.width,
+                height: this.height,
+                mode: this.mode,
+            });
+        },
+
+        /**
+         * @TODO ?
+         * @private
+         */
+        _updateFont: function() {
+            this.fontStyle = "{fontWeight} {fontSize}px {fontFamily}".format(this);
+            if (this.text) {
+                this._renderText();
+            }
+        },
+    });
+    
+    
+    /**
+     * @property    text
+     * 文字
+     */
+    tm.ui.LabelArea.prototype.accessor("text", {
+        "get": function() { return this._text; },
+        "set": function(v){
+            this.setText(v);
+        }
+    });
+    
+    /**
+     * @property    fontSize
+     * フォントサイズ
+     */
+    tm.ui.LabelArea.prototype.accessor("fontSize", {
+        "get": function() { return this._fontSize; },
+        "set": function(v){ this._fontSize = v; this._updateFont(); }
+    });
+    
+    /**
+     * @property    fontFamily
+     * フォント
+     */
+    tm.ui.LabelArea.prototype.accessor("fontFamily", {
+        "get": function() { return this._fontFamily; },
+        "set": function(v){ this._fontFamily = v; this._updateFont(); }
+    });
+    
+    /**
+     * @property    fontWeight
+     */
+    tm.ui.LabelArea.prototype.accessor("fontWeight", {
+        "get": function() { return this._fontWeight; },
+        "set": function(v) {
+            this._fontWeight = v; this._updateFont();
+        },
+    });
+    
+    /**
+     * @property    fillStyle
+     */
+    tm.ui.LabelArea.prototype.accessor("fillStyle", {
+        "get": function() { return this._fillStyle; },
+        "set": function(v) {
+            this._fillStyle = v; this._updateFont();
+        },
+    });
+    
+    /**
+     * @property    bgColor
+     */
+    tm.ui.LabelArea.prototype.accessor("bgColor", {
+        "get": function() { return this._bgColor; },
+        "set": function(v) {
+            this._bgColor = v; this._updateFont();
+        },
+    });
+
+    /**
+     * @property    width
+     * dummy
+     */
+    tm.ui.LabelArea.prototype.accessor("width", {
+        "get": function() { return this._width; },
+        "set": function(v){
+            this._width = v;
+            if (this.text) {
+                this._renderText();
+            }
+        }
+    });
+    
+    /**
+     * @property    height
+     * dummy
+     */
+    tm.ui.LabelArea.prototype.accessor("height", {
+        "get": function() { return this._height; },
+        "set": function(v){
+            this._height = v;
+            if (this.text) {
+                this._renderText();
+            }
+        }
+    });
+
+    
+})();
+
 /*
  * loadingscene.js
  */
@@ -16512,9 +16660,9 @@ tm.ui = tm.ui || {};
             param = {}.$extend(DEFAULT_PARAM, param);
             
             this.bg = tm.display.Shape(param.width, param.height).addChildTo(this);
-            this.bg.canvas.clearColor("hsla(200, 80%, 70%, 0.0)");
+            this.bg.canvas.clearColor("transparent");
             this.bg.setOrigin(0, 0);
-
+            
             var label = tm.display.Label("Loading");
             label.x = param.width/2;
             label.y = param.height/2;
@@ -17359,12 +17507,17 @@ tm.sound = tm.sound || {};
          */
         play: function(time) {
             if (time === undefined) time = 0;
-            this.source.noteOn(this.context.currentTime + time);
-            /*
-            this.source.noteGrainOn(this.context.currentTime + time, 0, this.buffer.duration);
-            console.dir(this.buffer.duration);
-            console.dir(this.context.currentTime)
-            */
+
+            if (this.source.playbackState == 0) {
+                this.source.noteOn(this.context.currentTime + time);
+            }
+            
+            var self = this;
+            var time = (this.source.buffer.duration/this.source.playbackRate.value)*1000;
+            window.setTimeout(function() {
+                var e = tm.event.Event("ended");
+                self.fire(e);
+            }, time);
 
             return this;
         },
@@ -17374,6 +17527,9 @@ tm.sound = tm.sound || {};
          */
         stop: function(time) {
             if (time === undefined) time = 0;
+            if (this.source.playbackState == 0) {
+                return ;
+            }
             this.source.noteOff(this.context.currentTime + time);
             
             var buffer = this.buffer;
@@ -17891,6 +18047,7 @@ tm.google = tm.google || {};
             "CircleShape",
             "TriangleShape",
             "RectangleShape",
+            "RoundRectangleShape",
             "StarShape",
             "PolygonShape",
             "HeartShape",

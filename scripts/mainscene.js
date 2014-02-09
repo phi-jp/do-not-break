@@ -12,13 +12,13 @@ tm.define("MainScene", {
         this.superInit();
 
         // bgm 再生
-        playMusic("bgm_game");
+        tm.asset.Manager.get("bgm_game").setLoop(true).play();
 
         blockGroup = tm.app.CanvasElement().addChildTo(this);
         //ボールグループ作成
         ballGroup = tm.app.CanvasElement().addChildTo(this);
         eballGroup = tm.app.CanvasElement().addChildTo(this);
-        
+
         gameflg = 1;
         barsize =55;
         
@@ -114,7 +114,14 @@ tm.define("MainScene", {
             
         this.gameovertimer =0;
 
-        return ;
+        this.onblur = function() {
+            this.app.pushScene(PauseScene());
+        };
+
+        // setTimeout(function() {
+        //     this.app.pushScene(PauseScene());
+        // }.bind(this), 100);
+
 
         // adult button
         var debugButton = tm.display.CanvasElement().addChildTo(this);
@@ -203,8 +210,8 @@ tm.define("MainScene", {
                     // ボーナススプライトを表示
                     this.bonusSprite.show().wakeUp();
                     // bgm を変更する
-                    stopMusic("bgm_game");
-                    playMusic("bgm_bonus");
+                    tm.asset.Manager.get("bgm_game").setLoop(true).stop();
+                    tm.asset.Manager.get("bgm_bonus").setLoop(true).play();
                 }
 
                 ++this.timer;
@@ -266,8 +273,8 @@ tm.define("MainScene", {
                 this.etimer++;
 
                 if(this.etimer > 500){
-                    stopMusic("bgm_bonus");
-                    playMusic("bgm_game");
+                    tm.asset.Manager.get("bgm_bonus").setLoop(true).stop();
+                    tm.asset.Manager.get("bgm_game").setLoop(true).play();
 
                 	this.bonusSprite.hide();
                     
@@ -427,10 +434,13 @@ var balls = tm.createClass({
 
         // se
         if (this.type == 2 && gagagagaga == false) {
+            var sound = tm.asset.Manager.get("se_gagagagaga").clone();
             gagagagaga = true;
-            playSound("se_gagagagaga", function() {
+            sound.onended = function() {
+                console.log("hoge");
                 gagagagaga = false;
-            });
+            };
+            sound.play();
         }
 
         //速度処理。幾何学っぽい動きをするらしい
@@ -458,13 +468,16 @@ var balls = tm.createClass({
 
                     // se
                     if (this.type != 2) {
-                        playSound("se_pipon");
+                        tm.asset.Manager.get("se_pipon").clone().play();
                     }
                     else if (gagagagaga == false) {
+                        var sound = tm.asset.Manager.get("se_gagagagaga").clone();
                         gagagagaga = true;
-                        playSound("se_gagagagaga", function() {
+                        sound.onended = function() {
+                            console.log("hoge");
                             gagagagaga = false;
-                        });
+                        };
+                        sound.play();
                     }
                 }
             }
@@ -479,7 +492,7 @@ var balls = tm.createClass({
                 }
 
                 // 跳ね返り
-                playSound("se_pon");
+                tm.asset.Manager.get("se_pon").clone().play();
             }
         }
 
@@ -493,7 +506,7 @@ var balls = tm.createClass({
                 block.remove();
                 self.ballflg++;
 
-                playSound("se_hit_block");
+                tm.asset.Manager.get("se_hit_block").clone().play();
                }
              
         });
@@ -516,7 +529,7 @@ var balls = tm.createClass({
             this.remove();
 
             // game over se
-            playSound("se_gameover");
+            tm.asset.Manager.get("se_gameover").clone().play();
         }
 
         //ブロックに２回あたったら消える

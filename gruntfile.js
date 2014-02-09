@@ -13,9 +13,11 @@ module.exports = function(grunt) {
 
   var target = [
   	"plugins/tmlib.js",
-  	"scripts/piyo.js",
+    "scripts/piyo.js",
+    "scripts/nativeaudio.js",
   	"scripts/param.js",
   	"scripts/resultscene.js",
+    "scripts/pausescene.js",
   	"scripts/mainscene.js",
   	"scripts/main.js",
   ];
