@@ -15,6 +15,8 @@ var BLOCK_HEIGHT = 25;
 
 var BAR_POSITION_Y = 700;
 
+var PATH_FORMAT_IMAGES = "images/{0}";
+var PATH_FORMAT_SOUNDS = "sounds/{0}";
 var LANGUAGE = "ja";
 
 var UI_DATA = {

@@ -9,6 +9,7 @@ tm.define("PauseScene", {
 	init: function() {
 		this.superInit();
 
+        tm.asset.Manager.get("bgm_game").setLoop(true).stop();
 		this.fromJSON({
 			children: {
 				"bg": {
@@ -34,6 +35,7 @@ tm.define("PauseScene", {
 	},
 
 	onpointingstart: function() {
+        tm.asset.Manager.get("bgm_game").setLoop(true).play();
 		this.app.popScene();
 	},
 })

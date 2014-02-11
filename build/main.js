@@ -18092,7 +18092,6 @@ tm.google = tm.google || {};
 var isNative = (function() {
     var flag = /piyokawa/i.test(navigator.userAgent);
     return function() {
-        return true;
         return flag;
     };
 })();
@@ -18404,6 +18403,8 @@ var BLOCK_HEIGHT = 25;
 
 var BAR_POSITION_Y = 700;
 
+var PATH_FORMAT_IMAGES = "images/{0}";
+var PATH_FORMAT_SOUNDS = "sounds/{0}";
 var LANGUAGE = "ja";
 
 var UI_DATA = {
@@ -18678,9 +18679,9 @@ tm.define("ResultScene", {
     init: function(param) {
         this.superInit();
 
-        stopMusic("bgm_game");
+        tm.asset.Manager.get("bgm_game").setLoop(true).stop();
 
-        playSound("se_show");
+        tm.asset.Manager.get("se_show").clone().play();
         
         this.fromJSON(UI_DATA.result);
         
@@ -18715,7 +18716,7 @@ tm.define("ResultScene", {
                     hashtags: hashtags,
                     url: url
                 });
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             });
         // facebook
         this.ui.btnFacebook
@@ -18726,7 +18727,7 @@ tm.define("ResultScene", {
                     text: message,
                     url: url
                 });
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             });
         // line
         this.ui.btnLine
@@ -18737,7 +18738,7 @@ tm.define("ResultScene", {
                     text: message,
                     url: url
                 });
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             });
 
         this.ui.btnTitle
@@ -18746,7 +18747,7 @@ tm.define("ResultScene", {
             .on("pointingstart", function() {
                 var app = this.app;
                 yyjtk.api.closeView();
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             }.bind(this));
         // コンティニュー
         this.ui.btnContinue
@@ -18757,7 +18758,7 @@ tm.define("ResultScene", {
 
                 app.popScene();
                 app.replaceScene(MainScene());
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             }.bind(this));
         // ランキング
         this.ui.btnRanking
@@ -18765,7 +18766,7 @@ tm.define("ResultScene", {
             .setBoundingType("rect")
             .on("pointingstart", function() {
                 yyjtk.api.viewRanking(RANKING_ID);
-                playSound("se_pi");
+                tm.asset.Manager.get("se_pi").clone().play();
             }.bind(this));
 
         // ランキング送信
@@ -18787,7 +18788,9 @@ tm.define("ResultScene", {
         
         this.score += 7;
 
-        if (app.frame % 4 == 0) { playSound("se_pi"); }
+        if (app.frame % 4 == 0) { 
+            tm.asset.Manager.get("se_pi").clone().play();
+        }
 
         if (p.getPointingStart() == false && point >= this.score) {
             this.scoreLabel.text = this.score;
@@ -18798,7 +18801,7 @@ tm.define("ResultScene", {
             this.rankLabel.show();
             this.rankImage.show();
             this.update = this.incrementRank;
-            playSound("se_show");
+            tm.asset.Manager.get("se_show").clone().play();
         }
     },
     
@@ -18807,7 +18810,9 @@ tm.define("ResultScene", {
         
         this.rank += 1;
 
-        if (app.frame % 4 == 0) { playSound("se_pi"); }
+        if (app.frame % 4 == 0) {
+            tm.asset.Manager.get("se_pi").clone().play();
+        }
 
         if (p.getPointingStart() == false && rank >= this.rank) {
             this.rankLabel.text = this.rank + "";
@@ -18818,7 +18823,7 @@ tm.define("ResultScene", {
             
             // メッセージをフェードイン
             this.fadeMessage();
-            playSound("se_show");
+            tm.asset.Manager.get("se_show").clone().play();
         }
     },
     
@@ -18853,6 +18858,7 @@ tm.define("PauseScene", {
 	init: function() {
 		this.superInit();
 
+        tm.asset.Manager.get("bgm_game").setLoop(true).stop();
 		this.fromJSON({
 			children: {
 				"bg": {
@@ -18878,6 +18884,7 @@ tm.define("PauseScene", {
 	},
 
 	onpointingstart: function() {
+        tm.asset.Manager.get("bgm_game").setLoop(true).play();
 		this.app.popScene();
 	},
 })
@@ -18901,7 +18908,7 @@ tm.define("MainScene", {
         //ボールグループ作成
         ballGroup = tm.app.CanvasElement().addChildTo(this);
         eballGroup = tm.app.CanvasElement().addChildTo(this);
-        
+
         gameflg = 1;
         barsize =55;
         
@@ -19005,7 +19012,6 @@ tm.define("MainScene", {
         //     this.app.pushScene(PauseScene());
         // }.bind(this), 100);
 
-        return ;
 
         // adult button
         var debugButton = tm.display.CanvasElement().addChildTo(this);
@@ -19675,7 +19681,7 @@ tm.main(function() {
     app.resize(SCREEN_WIDTH, SCREEN_HEIGHT);
     app.fitWindow();
 
-    var flow = tm.util.Flow(1, function() {
+    var flow = tm.util.Flow(2, function() {
         var scene = tm.global[sceneName]();
         app.replaceScene(scene);
     });
@@ -19701,9 +19707,19 @@ tm.main(function() {
     LANGUAGE = (function() {
         return navigator.browserLanguage || navigator.language || navigator.userLanguage;
     })();
+
+    yyjtk.api.getLanguage(function(lang) {
+        LANGUAGE = lang;
+        flow.pass();
+    });
     
     // 実行
     app.run();
+    
+    window._pause = function() {
+        app.pushScene(PauseScene());
+    };
+
 });
 
 
